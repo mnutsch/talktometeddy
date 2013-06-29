@@ -20,6 +20,9 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import example.simplespeech.AudioPlayer;
+import example.simplespeech.TTSRequest;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -51,6 +54,32 @@ public class SimpleSpeechActivityDemo extends Activity {
     private TextView resultView = null;
     private WebView webView = null;
     private String oauthToken = null;
+    private TTSClient ttsClient = null;
+    private AudioPlayer audioPlayer = null;
+    
+    // strings for Teddy
+    private String greeting = "Hey Kid dough! Press my heart and talk to me.";
+    private String task1Q_encoded = "prime+colors";
+    private String task1Q_decoded = "prime colors";
+    private String task1A = "The prime colors are red, blue, yellow.";
+    
+    private String task2Q_encoded = "count+numbers";
+    private String task2Q_decoded = "count numbers";
+    private String task2A = "Let's count to ten. One, two, three, four, five, six, seven, eight, nine, ten.";
+   
+    private String task3Q_encoded = "sounds+do+animals+make";
+    private String task3Q_decoded = "sounds do animals make";
+    private String task3A = "Let's talk about the sounds that animals make. The cow says Moo. The cat says Meow. The dog says Woof Woof.";
+    
+    private String task4Q_encoded = "sing+me+a+song";
+    private String task4Q_decoded = "sing me a song";
+    private String task4A = "Let's sing a song. Twinkle twinkle little star. How I wonder what you are.";
+    
+    private String task5Q_encoded = "teach+me+alphabet";
+    private String task5Q_decoded = "teach me alphabet";
+    private String task5A = "Let's learn the alphabet. A B C D E F G";
+    
+    private String fallback = "I didn't understand you! Please say again.";
     
     //global variables specific to sentence recognition API
   	static String matchingprompt;
@@ -66,6 +95,9 @@ public class SimpleSpeechActivityDemo extends Activity {
         
         // First, we specify which layout resource we'll be using.
         setContentView(R.layout.speech);
+        
+     // A simple UI-less player for the TTS audio.
+        audioPlayer = new AudioPlayer(this);
         
         // This is the Speak button that the user presses to start a speech
         // interaction.
@@ -210,7 +242,7 @@ public class SimpleSpeechActivityDemo extends Activity {
         resultView.setText(resultText);
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(resultText);
-        String myurl = "http://www.sentencerecognition.com/sentencerecognition.php?input="+query+"&sentence1=number&sentence2=color&sentence3=song&sentence4=animals";
+        String myurl = "http://www.sentencerecognition.com/sentencerecognition.php?input="+query+"&sentence1="+this.task1Q_encoded+"&sentence2="+this.task2Q_encoded+"&sentence3="+this.task3Q_encoded+"&sentence4="+this.task4Q_encoded+"&sentence5="+this.task5Q_encoded;
         
         //getting HTTP
 		
@@ -244,34 +276,79 @@ public class SimpleSpeechActivityDemo extends Activity {
 		}
 		  displaystring = "Matching Prompt: " + matchingprompt + "\n" + "Score: " + matchingpromptscore;
         
-		int promptScore = Integer.parseInt(matchingpromptscore);
+		double promptScore = Double.parseDouble(matchingpromptscore);
 		
-		if(promptScore < 25)
+		if(promptScore < 35)
 		{
 			webView.loadData("I didn't understand you!", "text/html", "UTF-8");
+			this.startTTS(this.fallback);
 		}
-		else if(matchingprompt.compareTo("number") == 0)
+		else if(matchingprompt.compareTo(this.task1Q_decoded) == 0)
 		{
-			webView.loadData("Let's learn numbers. 1 2 3 4 5 6 7 8 9 10", "text/html", "UTF-8");
+			webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task1A);
 		}
-		else if(matchingprompt.compareTo("color") == 0)
+		else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
 		{
-			webView.loadData("some colors are green blue red", "text/html", "UTF-8");
+			webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task2A);
 		}
-		else if(matchingprompt.compareTo("song") == 0)
+		else if(matchingprompt.compareTo(this.task3Q_decoded) == 0)
 		{
-			webView.loadData("i will sing a song.", "text/html", "UTF-8");
+			webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task3A);
 		}
-		else if(matchingprompt.compareTo("animals") == 0)
+		else if(matchingprompt.compareTo(this.task4Q_decoded) == 0)
 		{
-			webView.loadData("the cow says moo", "text/html", "UTF-8");
+			webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task4A);
+		}
+		else if(matchingprompt.compareTo(this.task5Q_decoded) == 0)
+		{
+			webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task5A);
 		}
 		
 		
 		//webView.loadUrl(url);
 	        
     }
-
+    
+    /**
+     * This callback object will get the TTS responses.
+    **/
+    private class TTSClient implements TTSRequest.Client 
+    {
+        @Override public void 
+        handleResponse(byte[] audioData, Exception error) 
+        {
+            if (cancel)
+                return;
+            if (audioData != null) {
+                Log.v("SimpleTTS", "Text to Speech returned "+audioData.length+" of audio.");
+                audioPlayer.play(audioData);
+            }
+            else {
+                // The TTS service was not able to generate the audio.
+                Log.v("SimpleTTS", "Unable to convert text to speech.", error);
+                // Real applications probably shouldn't display an alert.
+                alert(null, "Unable to convert text to speech.");
+            }
+        }
+        /** Set to true to prevent playing. **/
+        boolean cancel = false;
+    }
+    
+    /**
+     * Start a TTS request to speak the argument.
+    **/
+    private void startTTS(String textToSpeak)
+    {
+        TTSRequest tts = TTSRequest.forService(SpeechConfig.ttsUrl(), oauthToken);
+        ttsClient = new TTSClient();
+        tts.postText(textToSpeak, ttsClient);
+    }
+    
     /** Configure the webview that displays websites with the recognition text. **/
     private void configureWebView() {
         webView.getSettings().setJavaScriptEnabled(true);
@@ -305,6 +382,7 @@ public class SimpleSpeechActivityDemo extends Activity {
         {
             if (token != null) {
                 oauthToken = token;
+                readyForSpeech();
                 speakButton.setText(R.string.speak);
                 speakButton.setEnabled(true);
             }
@@ -317,7 +395,18 @@ public class SimpleSpeechActivityDemo extends Activity {
             }
         }
     }
-
+    
+    /**
+     * When the app is authenticated with the Speech API, 
+     * enable the interface and speak out a greeting.
+    **/
+    private void 
+    readyForSpeech() 
+    {
+        // Make Text to Speech request that will speak out a greeting.
+        startTTS(this.greeting);
+    }
+    
     private void alert(String header, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message)
