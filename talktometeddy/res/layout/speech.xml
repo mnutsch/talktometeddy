@@ -8,7 +8,7 @@
         android:id="@+id/heartSpeakButton"
         android:layout_width="fill_parent"
         android:layout_height="500dp"
-        android:src="@drawable/teddy_bear_icon" />
+        android:src="@drawable/heart_button" />
 
     <WebView
         android:id="@+id/webview"

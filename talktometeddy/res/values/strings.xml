@@ -3,8 +3,8 @@
     <string name="speak">Press to Talk</string>
     <string name="speak_wait">Please wait</string>
     <string name="app_name">talktometeddy</string>
-    <string name="app_name_launcher">Simple Speech Examples</string>
-    <string name="app_name_activity">Simple Speech Example using Activity</string>
+    <string name="app_name_launcher">Talking Teddy</string>
+    <string name="app_name_activity">Talking Teddy</string>
     <string name="app_name_service">Simple Speech Example using Service</string>
     <string name="result"> </string>
 </resources>

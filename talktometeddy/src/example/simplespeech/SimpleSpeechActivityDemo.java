@@ -67,13 +67,13 @@ public class SimpleSpeechActivityDemo extends Activity {
     private String task1Q_decoded = "prime colors";
     private String task1A = "The prime colors are red, blue, yellow.";
     
-    private String task2Q_encoded = "count+numbers";
-    private String task2Q_decoded = "count numbers";
+    private String task2Q_encoded = "teach+count+numbers";
+    private String task2Q_decoded = "teach count numbers";
     private String task2A = "Let's count to ten. One, two, three, four, five, six, seven, eight, nine, ten.";
    
     private String task3Q_encoded = "sounds+do+animals+make";
     private String task3Q_decoded = "sounds do animals make";
-    private String task3A = "Let's talk about the sounds that animals make. The cow says Moo. The cat says Meow. The dog says Woof Woof.";
+    private String task3A = "Let's talk about the sounds that animals make. The cow says Moo. The cat says Meow. The dog says Woof Woof. The pig says Oink Oink.";
     
     private String task4Q_encoded = "sing+me+a+song";
     private String task4Q_decoded = "sing me a song";
@@ -81,7 +81,16 @@ public class SimpleSpeechActivityDemo extends Activity {
     
     private String task5Q_encoded = "teach+me+alphabet";
     private String task5Q_decoded = "teach me alphabet";
-    private String task5A = "Let's learn the alphabet. A B C D E F G";
+    private String task5A = "Let's learn the alphabet. Ei for apple, B for ball, C for cat, D for dog, E for elephant, F for frog, G for goat. Your turn, I'm tired now!";
+    private String tiredstr = "I'm tired now!";
+    
+    private String task6Q_encoded = "hi+teddy";
+    private String task6Q_decoded = "hi teddy";
+    private String task6A = "Hello kid!";
+    
+    private String task7Q_encoded = "what+things+do+you+know";
+    private String task7Q_decoded = "what things do you know";
+    private String task7A = "I know colors, numbers, animal sounds, the alphabet and a song.";
     
     private String fallback = "I didn't understand you! Please say again.";
     
@@ -115,6 +124,7 @@ public class SimpleSpeechActivityDemo extends Activity {
         heartSpeakButton = (ImageButton)findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	stopTTS();
                 startSpeechActivity();
             }
         });
@@ -137,6 +147,18 @@ public class SimpleSpeechActivityDemo extends Activity {
         
         // Fetch the OAuth credentials.  
         validateOAuth();
+    }
+    
+    
+    /**
+     * Stops any Text to Speech in progress.
+    **/
+    private void
+    stopTTS()
+    {
+        if (ttsClient != null)
+            ttsClient.cancel = true;
+        audioPlayer.stop();
     }
 
     /**
@@ -250,10 +272,17 @@ public class SimpleSpeechActivityDemo extends Activity {
     	String mystring = "";
 		String displaystring;
     	
-        resultView.setText(resultText);
+        resultView.setText("Teddy heard \""+resultText+"\"");
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(resultText);
-        String myurl = "http://www.sentencerecognition.com/sentencerecognition.php?input="+query+"&sentence1="+this.task1Q_encoded+"&sentence2="+this.task2Q_encoded+"&sentence3="+this.task3Q_encoded+"&sentence4="+this.task4Q_encoded+"&sentence5="+this.task5Q_encoded;
+        String myurl = "http://www.sentencerecognition.com/sentencerecognition.php?input="+query+"" +
+        		"&sentence1="+this.task1Q_encoded+"" +
+        		"&sentence2="+this.task2Q_encoded+
+        		"&sentence3="+this.task3Q_encoded+
+        		"&sentence4="+this.task4Q_encoded+
+        		"&sentence5="+this.task5Q_encoded+
+        		"&sentence6="+this.task6Q_encoded+
+        		"&sentence7="+this.task7Q_encoded;
         
         //getting HTTP
 		
@@ -291,37 +320,44 @@ public class SimpleSpeechActivityDemo extends Activity {
 		
 		if(promptScore < 35)
 		{
-			webView.loadData("I didn't understand you!", "text/html", "UTF-8");
+			//webView.loadData("I didn't understand you!", "text/html", "UTF-8");
 			this.startTTS(this.fallback);
 		}
 		else if(matchingprompt.compareTo(this.task1Q_decoded) == 0)
 		{
-			webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
+			//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
 			this.startTTS(this.task1A);
 		}
 		else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
 		{
-			webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
+			//webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
 			this.startTTS(this.task2A);
 		}
 		else if(matchingprompt.compareTo(this.task3Q_decoded) == 0)
 		{
-			webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
+			//webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
 			this.startTTS(this.task3A);
 		}
 		else if(matchingprompt.compareTo(this.task4Q_decoded) == 0)
 		{
-			webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
+			//webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
 			this.startTTS(this.task4A);
 		}
 		else if(matchingprompt.compareTo(this.task5Q_decoded) == 0)
 		{
-			webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
+			//webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
 			this.startTTS(this.task5A);
 		}
-		
-		
-		//webView.loadUrl(url);
+		else if(matchingprompt.compareTo(this.task6Q_decoded) == 0)
+		{
+			//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task6A);
+		}
+		else if(matchingprompt.compareTo(this.task7Q_decoded) == 0)
+		{
+			//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
+			this.startTTS(this.task7A);
+		}
 	        
     }
     
