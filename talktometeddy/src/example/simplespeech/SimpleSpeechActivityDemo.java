@@ -22,6 +22,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import example.simplespeech.AudioPlayer;
 import example.simplespeech.TTSRequest;
+import example.simplespeech.TTSClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +37,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.att.android.speech.ATTSpeechActivity;
+import com.example.talktometeddy.R;
 
 /**
  * SimpleSpeech is a very basic demonstration of using the ATTSpeechKit 
@@ -314,30 +316,7 @@ public class SimpleSpeechActivityDemo extends Activity {
 	        
     }
     
-    /**
-     * This callback object will get the TTS responses.
-    **/
-    private class TTSClient implements TTSRequest.Client 
-    {
-        @Override public void 
-        handleResponse(byte[] audioData, Exception error) 
-        {
-            if (cancel)
-                return;
-            if (audioData != null) {
-                Log.v("SimpleTTS", "Text to Speech returned "+audioData.length+" of audio.");
-                audioPlayer.play(audioData);
-            }
-            else {
-                // The TTS service was not able to generate the audio.
-                Log.v("SimpleTTS", "Unable to convert text to speech.", error);
-                // Real applications probably shouldn't display an alert.
-                alert(null, "Unable to convert text to speech.");
-            }
-        }
-        /** Set to true to prevent playing. **/
-        boolean cancel = false;
-    }
+
     
     /**
      * Start a TTS request to speak the argument.
@@ -345,8 +324,8 @@ public class SimpleSpeechActivityDemo extends Activity {
     private void startTTS(String textToSpeak)
     {
         TTSRequest tts = TTSRequest.forService(SpeechConfig.ttsUrl(), oauthToken);
-        ttsClient = new TTSClient();
-        tts.postText(textToSpeak, ttsClient);
+        ttsClient = new TTSClient(this.audioPlayer);
+        tts.postTextWithVoice(textToSpeak, "mike", ttsClient);
     }
     
     /** Configure the webview that displays websites with the recognition text. **/
