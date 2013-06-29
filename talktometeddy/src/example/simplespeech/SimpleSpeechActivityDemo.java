@@ -35,6 +35,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ImageButton;
 
 import com.att.android.speech.ATTSpeechActivity;
 import com.example.talktometeddy.R;
@@ -53,6 +54,7 @@ import com.example.talktometeddy.R;
 **/
 public class SimpleSpeechActivityDemo extends Activity {
     private Button speakButton = null;
+    private ImageButton heartSpeakButton = null;
     private TextView resultView = null;
     private WebView webView = null;
     private String oauthToken = null;
@@ -105,6 +107,13 @@ public class SimpleSpeechActivityDemo extends Activity {
         // interaction.
         speakButton = (Button)findViewById(R.id.speak_button);
         speakButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startSpeechActivity();
+            }
+        });
+        
+        heartSpeakButton = (ImageButton)findViewById(R.id.heartSpeakButton);
+        heartSpeakButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startSpeechActivity();
             }
