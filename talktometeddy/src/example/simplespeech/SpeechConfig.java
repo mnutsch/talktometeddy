@@ -14,17 +14,27 @@ public class SpeechConfig {
     static String serviceUrl() {
         return "https://api.att.com/speech/v3/speechToText";
     }
+
+    /** The URL of AT&T Speech to Text service. **/
+    static String recognitionUrl() {
+        return "https://api.att.com/speech/v3/speechToText";
+    }
+
+    /** The URL of AT&T Text to Speech service. **/
+    static String ttsUrl() {
+        return "https://api.att.com/speech/v3/textToSpeech";
+    }
         
     /** The URL of AT&T Speech API OAuth service. **/
     static String oauthUrl() {
         return "https://api.att.com/oauth/token";
     }
-    
+
     /** The OAuth scope of AT&T Speech API. **/
     static String oauthScope() {
-        return "SPEECH";
+        return "TTS,SPEECH";
     }
-    
+
     /** Unobfuscates the OAuth client_id credential for the application. **/
     static String oauthKey() {
         // TODO: Replace this with code to unobfuscate your OAuth client_id.

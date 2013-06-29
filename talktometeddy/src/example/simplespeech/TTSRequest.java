@@ -6,15 +6,12 @@ For more information contact developer.support@att.com http://developer.att.com
 */
 package example.simplespeech;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import android.os.Handler;
+import android.util.Log;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import android.os.Handler;
 
 /**
  * Posts to AT&T Text to Speech service and fetches audio response.
@@ -32,7 +29,7 @@ public class TTSRequest
          * @param error  null on success, 
          *               or the exception if TTS failed
         **/
-        public void 
+        public void
         handleResponse(byte[] audioData, Exception error);
     }
     
@@ -112,7 +109,7 @@ public class TTSRequest
         reader.start();
     }
 
-    public void postText(String text, String voiceName, Client client) {
+    public void postTextWithVoice(String text, String voiceName, Client client) {
         connection.setRequestProperty("X-Arg", "VoiceName=" + voiceName);
         postText(text, client);
     }
@@ -144,6 +141,18 @@ public class TTSRequest
             out.close();
             // Wait for the response.  
             // Note that getInputStream will throw exception for non-200 status.
+            Log.e("TTSRequest", "" + connection.getResponseMessage());
+
+            String line = connection.getHeaderField(0);
+            Log.e("TTSRequest", "" + line);
+            int linenum = 1;
+            while (line != null) {
+                line = connection.getHeaderField(linenum);
+                Log.e("TTSRequest", "" + line);
+                linenum++;
+            }
+
+
             InputStream response = connection.getInputStream();
             final byte[] data;
             try {

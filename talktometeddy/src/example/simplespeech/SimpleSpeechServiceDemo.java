@@ -29,6 +29,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
+import com.example.talktometeddy.R;
 
 /**
  * SimpleSpeech is a very basic demonstration of using the ATTSpeechKit 

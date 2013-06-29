@@ -1,14 +1,14 @@
 package example.simplespeech;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * A minimal, UI-less audio player.

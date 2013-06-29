@@ -1,7 +1,7 @@
 /*
 Licensed by AT&T under 'Software Development Kit Tools Agreement' 2012.
 TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION: http://developer.att.com/sdk_agreement/
-Copyright 2012 AT&T Intellectual Property. All rights reserved. 
+Copyright 2012 AT&T Intellectual Property. All rights reserved.
 For more information contact developer.support@att.com http://developer.att.com
 */
 package example.simplespeech;
@@ -12,38 +12,39 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.example.talktometeddy.R;
 
 /**
  * A simple activity launcher.
-**/
+ **/
 public class MainActivity extends ListActivity
 {
     /**
      * Display a list of sample activities.
-    **/
+     **/
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
         // Display the list of sample activities in a standard Android layout.
-        
+
         activities = new Item[] {
-            new Item(new Intent(this, SimpleSpeechActivityDemo.class), 
-                    getString(R.string.app_name_activity)),
-            new Item(new Intent(this, SimpleSpeechServiceDemo.class), 
-                    getString(R.string.app_name_service))
+                new Item(new Intent(this, SimpleSpeechActivityDemo.class),
+                        getString(R.string.app_name_activity)),
+                //new Item(new Intent(this, SimpleSpeechServiceDemo.class),
+                //getString(R.string.app_name_service))
         };
-        
+
         /*
-        setListAdapter(new ArrayAdapter<Item>(this, 
+        setListAdapter(new ArrayAdapter<Item>(this,
                 android.R.layout.simple_list_item_1, activities));
                 */
         startActivity(activities[0].intent);
     }
-    
+
     /**
      * Represents an activity for the list view.
-    **/
+     **/
     private class Item {
         final Intent intent;
         final String title;
@@ -56,7 +57,7 @@ public class MainActivity extends ListActivity
     }
 
     private Item[] activities;
-    
+
     @Override
     public void onListItemClick(ListView parent, View view, int position, long id) {
         startActivity(activities[position].intent);

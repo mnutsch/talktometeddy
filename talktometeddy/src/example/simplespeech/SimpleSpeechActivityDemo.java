@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import com.example.talktometeddy.R;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -51,6 +52,8 @@ public class SimpleSpeechActivityDemo extends Activity {
     private TextView resultView = null;
     private WebView webView = null;
     private String oauthToken = null;
+    private AudioPlayer audioPlayer = null;
+    private TTSClient ttsClient = null;
     
     //global variables specific to sentence recognition API
   	static String matchingprompt;
@@ -63,6 +66,8 @@ public class SimpleSpeechActivityDemo extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        audioPlayer = new AudioPlayer(this);
         
         // First, we specify which layout resource we'll be using.
         setContentView(R.layout.speech);
@@ -94,6 +99,17 @@ public class SimpleSpeechActivityDemo extends Activity {
         
         // Fetch the OAuth credentials.  
         validateOAuth();
+    }
+
+    /**
+     * Called when the activity is leaving the foreground.
+     * Stops any audio playback.
+     **/
+    @Override protected void
+    onPause()
+    {
+        super.onPause();
+        stopTTS();
     }
 
     /**
@@ -245,7 +261,11 @@ public class SimpleSpeechActivityDemo extends Activity {
 		  displaystring = "Matching Prompt: " + matchingprompt + "\n" + "Score: " + matchingpromptscore;
         
 		int promptScore = Integer.parseInt(matchingpromptscore);
-		
+
+
+        stopTTS();
+        startTTS("I'm running!");
+
 		if(promptScore < 25)
 		{
 			webView.loadData("I didn't understand you!", "text/html", "UTF-8");
@@ -410,4 +430,53 @@ public class SimpleSpeechActivityDemo extends Activity {
   	     
   	         
   	     }
+
+    /**
+     * TTS Part Starts Here
+     */
+
+    /**
+     * Starts a TTS request to speak the argument
+     * @param textToSpeak string to be spoken
+     */
+    private void
+    startTTS(String textToSpeak)
+    {
+        TTSRequest tts = TTSRequest.forService(SpeechConfig.ttsUrl(), oauthToken);
+        ttsClient = new TTSClient(audioPlayer);
+        /**
+         * we are using mike as default here
+         */
+        //tts.postText(textToSpeak, ttsClient);
+        tts.postTextWithVoice(textToSpeak, "mike", ttsClient);
+    }
+
+
+    /**
+     * Starts a TTS request to speak the argument with specified voice character
+     * @param textToSpeak string to be spoken
+     * @param voice for now, mike or crystal
+     */
+    private void
+    startTTSWithVoice(String textToSpeak, String voice)
+    {
+        TTSRequest tts = TTSRequest.forService(SpeechConfig.ttsUrl(), oauthToken);
+        ttsClient = new TTSClient(audioPlayer);
+        tts.postTextWithVoice(textToSpeak, voice, ttsClient);
+    }
+
+    /**
+     * Stops any Text to Speech in progress.
+     **/
+    private void
+    stopTTS()
+    {
+        if (ttsClient != null)
+            ttsClient.cancel = true;
+        audioPlayer.stop();
+    }
+
+
+
+
 }
