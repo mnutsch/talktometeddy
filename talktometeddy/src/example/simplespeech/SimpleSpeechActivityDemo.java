@@ -326,8 +326,6 @@ public class SimpleSpeechActivityDemo extends Activity {
 		{
 			//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
 			this.startTTS(this.task1A);
-            R.Drawable.
-            this.heartSpeakButton.setIma;
 		}
 		else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
 		{

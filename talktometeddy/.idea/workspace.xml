@@ -43,12 +43,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="461dbdff-e99b-4250-85c4-40b24b40e86a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/example/simplespeech/StartScreenActivity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/launch_screen.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/example/simplespeech/MainActivity.java" afterPath="$PROJECT_DIR$/src/example/simplespeech/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/example/simplespeech/SimpleSpeechActivityDemo.java" afterPath="$PROJECT_DIR$/src/example/simplespeech/SimpleSpeechActivityDemo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="talktometeddy.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -128,9 +124,9 @@
       <file leaf-file-name="SimpleSpeechActivityDemo.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/example/simplespeech/SimpleSpeechActivityDemo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="329" column="23" selection-start="13579" selection-end="13579" vertical-scroll-proportion="0.4397163">
+            <state line="331" column="93" selection-start="13698" selection-end="13698" vertical-scroll-proportion="0.572695">
               <folding>
-                <element signature="e#0#20508#0" expanded="true" />
+                <element signature="e#0#20449#0" expanded="true" />
                 <element signature="imports" expanded="true" />
                 <element signature="docComment;method#stopTTS#0;class#SimpleSpeechActivityDemo#0" expanded="false" />
                 <element signature="method#startSpeechActivity#0;class#SimpleSpeechActivityDemo#0" expanded="false" />
@@ -266,8 +262,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="88" />
-    <option name="y" value="72" />
+    <option name="x" value="-17" />
+    <option name="y" value="104" />
     <option name="width" value="1440" />
     <option name="height" value="874" />
   </component>
@@ -590,7 +586,7 @@
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="ToolWindowManager">
-    <frame x="88" y="72" width="1440" height="874" extended-state="6" />
+    <frame x="-17" y="104" width="1440" height="874" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31779054" sideWeight="0.86604774" order="1" side_tool="false" content_ui="tabs" />
@@ -802,9 +798,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/example/simplespeech/SimpleSpeechActivityDemo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="329" column="23" selection-start="13579" selection-end="13579" vertical-scroll-proportion="0.4397163">
+        <state line="331" column="93" selection-start="13698" selection-end="13698" vertical-scroll-proportion="0.572695">
           <folding>
-            <element signature="e#0#20508#0" expanded="true" />
+            <element signature="e#0#20449#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="docComment;method#stopTTS#0;class#SimpleSpeechActivityDemo#0" expanded="false" />
             <element signature="method#startSpeechActivity#0;class#SimpleSpeechActivityDemo#0" expanded="false" />
