@@ -5,6 +5,7 @@
     <string name="app_name">talktometeddy</string>
     <string name="app_name_launcher">Talking Teddy</string>
     <string name="app_name_activity">Talking Teddy</string>
+    <string name="app_name_launch_screen">Talking Teddy</string>
     <string name="app_name_service">Simple Speech Example using Service</string>
     <string name="result"> </string>
 </resources>

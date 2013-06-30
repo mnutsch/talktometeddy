@@ -29,8 +29,9 @@ public class MainActivity extends ListActivity
         // Display the list of sample activities in a standard Android layout.
 
         activities = new Item[] {
-                new Item(new Intent(this, SimpleSpeechActivityDemo.class),
-                        getString(R.string.app_name_activity)),
+                new Item(new Intent(this, StartScreenActivity.class), getString(R.string.app_name_launch_screen))
+                //new Item(new Intent(this, SimpleSpeechActivityDemo.class),
+                //        getString(R.string.app_name_activity))
                 //new Item(new Intent(this, SimpleSpeechServiceDemo.class),
                 //getString(R.string.app_name_service))
         };
@@ -40,6 +41,7 @@ public class MainActivity extends ListActivity
                 android.R.layout.simple_list_item_1, activities));
                 */
         startActivity(activities[0].intent);
+        //startActivity(activities[1].intent);
     }
 
     /**
