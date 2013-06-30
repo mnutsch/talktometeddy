@@ -65,7 +65,7 @@ public class SimpleSpeechActivityDemo extends Activity {
     private String greeting = "Hey Kid dough! Press my heart and talk to me.";
     private String task1Q_encoded = "prime+colors";
     private String task1Q_decoded = "prime colors";
-    private String task1A = "The prime colors are red, blue, yellow.";
+    private String task1A = "The prime colors are red, blue and yellow.";
     
     private String task2Q_encoded = "teach+count+numbers";
     private String task2Q_decoded = "teach count numbers";
@@ -82,11 +82,10 @@ public class SimpleSpeechActivityDemo extends Activity {
     private String task5Q_encoded = "teach+me+alphabet";
     private String task5Q_decoded = "teach me alphabet";
     private String task5A = "Let's learn the alphabet. Ei for apple, B for ball, C for cat, D for dog, E for elephant, F for frog, G for goat. Your turn, I'm tired now!";
-    private String tiredstr = "I'm tired now!";
     
-    private String task6Q_encoded = "hi+teddy";
-    private String task6Q_decoded = "hi teddy";
-    private String task6A = "Hello kid!";
+    private String task6Q_encoded = "hi+teddy+how+are+you";
+    private String task6Q_decoded = "hi teddy how are you";
+    private String task6A = "Hey kid! I'm great, thanks for asking!";
     
     private String task7Q_encoded = "what+things+do+you+know";
     private String task7Q_decoded = "what things do you know";
