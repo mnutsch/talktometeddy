@@ -313,51 +313,56 @@ public class SimpleSpeechActivityDemo extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		  displaystring = "Matching Prompt: " + matchingprompt + "\n" + "Score: " + matchingpromptscore;
-        
-		double promptScore = Double.parseDouble(matchingpromptscore);
 		
-		if(promptScore < 35)
-		{
-			//webView.loadData("I didn't understand you!", "text/html", "UTF-8");
+		displaystring = "Matching Prompt: " + matchingprompt + "\n" + "Score: " + matchingpromptscore;
+        
+		try {
+			double promptScore = Double.parseDouble(matchingpromptscore);
+			if(promptScore < 35)
+			{
+				//webView.loadData("I didn't understand you!", "text/html", "UTF-8");
+				this.startTTS(this.fallback);
+			}
+			else if(matchingprompt.compareTo(this.task1Q_decoded) == 0)
+			{
+				//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task1A);
+			}
+			else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
+			{
+				//webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task2A);
+			}
+			else if(matchingprompt.compareTo(this.task3Q_decoded) == 0)
+			{
+				//webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task3A);
+			}
+			else if(matchingprompt.compareTo(this.task4Q_decoded) == 0)
+			{
+				//webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task4A);
+			}
+			else if(matchingprompt.compareTo(this.task5Q_decoded) == 0)
+			{
+				//webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task5A);
+			}
+			else if(matchingprompt.compareTo(this.task6Q_decoded) == 0)
+			{
+				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task6A);
+			}
+			else if(matchingprompt.compareTo(this.task7Q_decoded) == 0)
+			{
+				//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
+				this.startTTS(this.task7A);
+			}
+		}
+		catch (Exception e){
+			Log.v("SimpleSpeech", "Matching Prompt Score in Exception Handler = ["+ matchingpromptscore + "]");
 			this.startTTS(this.fallback);
-		}
-		else if(matchingprompt.compareTo(this.task1Q_decoded) == 0)
-		{
-			//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task1A);
-		}
-		else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
-		{
-			//webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task2A);
-		}
-		else if(matchingprompt.compareTo(this.task3Q_decoded) == 0)
-		{
-			//webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task3A);
-		}
-		else if(matchingprompt.compareTo(this.task4Q_decoded) == 0)
-		{
-			//webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task4A);
-		}
-		else if(matchingprompt.compareTo(this.task5Q_decoded) == 0)
-		{
-			//webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task5A);
-		}
-		else if(matchingprompt.compareTo(this.task6Q_decoded) == 0)
-		{
-			//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task6A);
-		}
-		else if(matchingprompt.compareTo(this.task7Q_decoded) == 0)
-		{
-			//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
-			this.startTTS(this.task7A);
-		}
-	        
+		}	        
     }
     
 
