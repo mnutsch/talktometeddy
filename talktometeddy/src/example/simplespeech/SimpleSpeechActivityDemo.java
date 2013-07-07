@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -36,6 +37,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.att.android.speech.ATTSpeechActivity;
 import com.example.talktometeddy.R;
@@ -62,40 +64,60 @@ public class SimpleSpeechActivityDemo extends Activity {
     private AudioPlayer audioPlayer = null;
     
     // strings for Teddy
-    private String greeting = "Hey Kid dough! Press my heart and talk to me.";
+    private String greeting1 = "Hey Kid dough! Press my heart and talk to me.";
+    private String greeting2 = "Hey there! Press my heart and talk to me.";
+    private String greeting3 = "Hello! Press my heart and talk to me.";
     private String task1Q_encoded = "prime+colors";
     private String task1Q_decoded = "prime colors";
-    private String task1A = "The prime colors are red, blue and yellow.";
+    private String task1A1 = "The prime colors are red, blue and yellow.";
+    private String task1A2 = "Combining the colors yellow and blue makes green.";
+    private String task1A3 = "Mixing the colors red and blue makes purple.";
     
     private String task2Q_encoded = "teach+count+numbers";
     private String task2Q_decoded = "teach count numbers";
-    private String task2A = "Let's count to ten. One, two, three, four, five, six, seven, eight, nine, ten.";
-   
+    private String task2A1 = "Let's count to ten. One, two, three, four, five, six, seven, eight, nine, ten.";
+    private String task2A2 = "Let's count by twos. Two, four, six, eight, ten.";
+    private String task2A3 = "Let's count by prime numbers. One, two, three, five, seven, eleven, thirteen, seventeen, nineteen, twenty three.";
+    
     private String task3Q_encoded = "sounds+do+animals+make";
     private String task3Q_decoded = "sounds do animals make";
-    private String task3A = "Let's talk about the sounds that animals make. The cow says Moo. The cat says Meow. The dog says Woof Woof. The pig says Oink Oink.";
+    private String task3A1 = "Let's talk about the sounds that animals make. The cow says Moo. The pig says Oink Oink.";
+    private String task3A2 = "Let's talk about the sounds that animals make. The cat says Meow. The dog says Woof Woof.";
+    private String task3A3 = "Let's talk about the sounds that animals make. The rooster says cockle doodle doo.";
     
     private String task4Q_encoded = "sing+me+a+song";
     private String task4Q_decoded = "sing me a song";
-    private String task4A = "Let's sing a song. Twinkle twinkle little star. How I wonder what you are.";
+    private String task4A1 = "Let's sing a song. Twinkle twinkle little star. How I wonder what you are.";
+    private String task4A2 = "Let's sing a song. London bridge is falling down, falling down, falling down";
+    private String task4A3 = "Let's sing a song. You are my sunshine, my only sunshine. You make me happy when skies are gray.";
     
     private String task5Q_encoded = "teach+me+alphabet";
     private String task5Q_decoded = "teach me alphabet";
-    private String task5A = "Let's learn the alphabet. Ei for apple, B for ball, C for cat, D for dog, E for elephant, F for frog, G for goat. Your turn, I'm tired now!";
+    private String task5A1 = "Let's learn the alphabet. Ei for apple, B for ball, C for cat.";
+    private String task5A2 = "Let's learn the alphabet. D for dog, E for elephant, F for frog.";
+    private String task5A3 = "Let's learn the alphabet. G for goat, H is for happy, eye is for iguana.";
     
-    private String task6Q_encoded = "hi+teddy+how+are+you";
-    private String task6Q_decoded = "hi teddy how are you";
-    private String task6A = "Hey kid! I'm great, thanks for asking!";
+    private String task6Q_encoded = "how+are+you";
+    private String task6Q_decoded = "how are you";
+    private String task6A1 = "I'm great, thanks for asking!";
+    private String task6A2 = "I'm happy! Today is a fun day!";
+    private String task6A3 = "Yawn... I'm sleepy. Let's take a nap.";
     
     private String task7Q_encoded = "what+things+do+you+know";
     private String task7Q_decoded = "what things do you know";
     private String task7A = "I know colors, numbers, animal sounds, the alphabet and a song.";
     
-    private String fallback = "I didn't understand you! Please say again.";
+    private String fallback1 = "I didn't understand you! Please say that again.";
+    private String fallback2 = "Will you please say that again?";
+    private String fallback3 = "I didn't understand you! What did you say?";
     
     //global variables specific to sentence recognition API
   	static String matchingprompt;
   	static String matchingpromptscore;
+  	
+  	int duration = Toast.LENGTH_SHORT;
+
+  	
     
     /** 
      * Called when the activity is first created.  This is where we'll hook up 
@@ -270,11 +292,12 @@ public class SimpleSpeechActivityDemo extends Activity {
     	
     	String mystring = "";
 		String displaystring;
-    	
+		Toast toast = Toast.makeText(this, resultText, duration);
+	  	toast.show();
         resultView.setText("Teddy heard \""+resultText+"\"");
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(resultText);
-        String myurl = "http://www.sentencerecognition.com/sentencerecognition.php?input="+query+"" +
+        String myurl = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"" +
         		"&sentence1="+this.task1Q_encoded+"" +
         		"&sentence2="+this.task2Q_encoded+
         		"&sentence3="+this.task3Q_encoded+
@@ -321,37 +344,142 @@ public class SimpleSpeechActivityDemo extends Activity {
 			if(promptScore < 35)
 			{
 				//webView.loadData("I didn't understand you!", "text/html", "UTF-8");
-				this.startTTS(this.fallback);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.fallback1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.fallback2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.fallback3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task1Q_decoded) == 0)
 			{
 				//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task1A);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task1A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task1A2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task1A3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
 			{
 				//webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task2A);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task2A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task2A2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task2A3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task3Q_decoded) == 0)
 			{
 				//webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task3A);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task3A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task3A2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task3A3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task4Q_decoded) == 0)
 			{
 				//webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task4A);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task4A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task4A2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task4A3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task5Q_decoded) == 0)
 			{
 				//webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task5A);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task5A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task5A2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task5A3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task6Q_decoded) == 0)
 			{
 				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task6A);
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task6A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task6A2);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task6A3);
+		    	}
+				
 			}
 			else if(matchingprompt.compareTo(this.task7Q_decoded) == 0)
 			{
@@ -361,7 +489,7 @@ public class SimpleSpeechActivityDemo extends Activity {
 		}
 		catch (Exception e){
 			Log.v("SimpleSpeech", "Matching Prompt Score in Exception Handler = ["+ matchingpromptscore + "]");
-			this.startTTS(this.fallback);
+			this.startTTS(this.fallback1);
 		}	        
     }
     
@@ -432,7 +560,22 @@ public class SimpleSpeechActivityDemo extends Activity {
     readyForSpeech() 
     {
         // Make Text to Speech request that will speak out a greeting.
-        startTTS(this.greeting);
+    	Random r = new Random();
+    	int i1=r.nextInt(4-1) + 1;
+    	
+    	if(i1 == 1)
+    	{
+    		startTTS(this.greeting1);
+    	}
+    	else if(i1 == 2)
+    	{
+    		startTTS(this.greeting2);
+    	}
+    	if(i1 == 3)
+    	{
+    		startTTS(this.greeting3);
+    	}
+    	
     }
     
     private void alert(String header, String message) {

@@ -38,12 +38,12 @@ public class SpeechConfig {
     /** Unobfuscates the OAuth client_id credential for the application. **/
     static String oauthKey() {
         // TODO: Replace this with code to unobfuscate your OAuth client_id.
-        return "d738a1c0d574b910b06bae6610fc45b0";
+        return "bdfac400e0589083dc924ffab6705b6e";
     }
 
     /** Unobfuscates the OAuth client_secret credential for the application. **/
     static String oauthSecret() {
         // TODO: Replace this with code to unobfuscate your OAuth client_secret.
-        return "d2f0a04723fe3573";
+        return "0879d2d3b36f5b3c";
     }
 }
