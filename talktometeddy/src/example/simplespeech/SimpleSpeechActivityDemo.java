@@ -63,6 +63,8 @@ public class SimpleSpeechActivityDemo extends Activity {
     private TTSClient ttsClient = null;
     private AudioPlayer audioPlayer = null;
     
+    private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
+    
     // strings for Teddy
     private String greeting1 = "Hey Kid dough! Press my heart and talk to me.";
     private String greeting2 = "Hey there! Press my heart and talk to me.";
@@ -297,7 +299,7 @@ public class SimpleSpeechActivityDemo extends Activity {
         resultView.setText("Teddy heard \""+resultText+"\"");
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(resultText);
-        String myurl = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"" +
+        String myurl = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"&key="+apikey+
         		"&sentence1="+this.task1Q_encoded+"" +
         		"&sentence2="+this.task2Q_encoded+
         		"&sentence3="+this.task3Q_encoded+
