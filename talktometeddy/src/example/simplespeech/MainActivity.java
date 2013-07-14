@@ -1,16 +1,9 @@
-/*
-Licensed by AT&T under 'Software Development Kit Tools Agreement' 2012.
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION: http://developer.att.com/sdk_agreement/
-Copyright 2012 AT&T Intellectual Property. All rights reserved.
-For more information contact developer.support@att.com http://developer.att.com
-*/
 package example.simplespeech;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.example.talktometeddy.R;
 
@@ -30,18 +23,9 @@ public class MainActivity extends ListActivity
 
         activities = new Item[] {
                 new Item(new Intent(this, StartScreenActivity.class), getString(R.string.app_name_launch_screen))
-                //new Item(new Intent(this, SimpleSpeechActivityDemo.class),
-                //        getString(R.string.app_name_activity))
-                //new Item(new Intent(this, SimpleSpeechServiceDemo.class),
-                //getString(R.string.app_name_service))
         };
 
-        /*
-        setListAdapter(new ArrayAdapter<Item>(this,
-                android.R.layout.simple_list_item_1, activities));
-                */
         startActivity(activities[0].intent);
-        //startActivity(activities[1].intent);
     }
 
     /**
