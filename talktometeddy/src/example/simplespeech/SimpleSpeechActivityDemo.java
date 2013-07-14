@@ -55,10 +55,7 @@ import com.example.talktometeddy.R;
  *          android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 **/
 public class SimpleSpeechActivityDemo extends Activity {
-    private Button speakButton = null;
     private ImageButton heartSpeakButton = null;
-    private TextView resultView = null;
-    private WebView webView = null;
     private String oauthToken = null;
     private TTSClient ttsClient = null;
     private AudioPlayer audioPlayer = null;
@@ -137,12 +134,12 @@ public class SimpleSpeechActivityDemo extends Activity {
         
         // This is the Speak button that the user presses to start a speech
         // interaction.
-        speakButton = (Button)findViewById(R.id.speak_button);
-        speakButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startSpeechActivity();
-            }
-        });
+        //speakButton = (Button)findViewById(R.id.heartSpeakButton);
+        //speakButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                startSpeechActivity();
+//            }
+//        });
         
         heartSpeakButton = (ImageButton)findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
@@ -151,13 +148,7 @@ public class SimpleSpeechActivityDemo extends Activity {
                 startSpeechActivity();
             }
         });
-        
-        // This will show the recognized text.
-        resultView = (TextView)findViewById(R.id.result);
-        
-        // This will show a website receiving the recognized text.
-        webView = (WebView)findViewById(R.id.webview);
-        configureWebView();
+
     }
     
     /** 
@@ -296,7 +287,6 @@ public class SimpleSpeechActivityDemo extends Activity {
 		String displaystring;
 		Toast toast = Toast.makeText(this, resultText, duration);
 	  	toast.show();
-        resultView.setText("Teddy heard \""+resultText+"\"");
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(resultText);
         String myurl = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"&key="+apikey+
@@ -507,16 +497,16 @@ public class SimpleSpeechActivityDemo extends Activity {
         tts.postTextWithVoice(textToSpeak, "mike", ttsClient);
     }
     
-    /** Configure the webview that displays websites with the recognition text. **/
-    private void configureWebView() {
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false; // Let the webview display the URL
-            }
-        });
-    }
+//    /** Configure the webview that displays websites with the recognition text. **/
+//    private void configureWebView() {
+//        webView.getSettings().setJavaScriptEnabled(true);
+//        webView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                return false; // Let the webview display the URL
+//            }
+//        });
+//    }
     
     /**
      * Start an asynchronous OAuth credential check. 
@@ -527,8 +517,7 @@ public class SimpleSpeechActivityDemo extends Activity {
             SpeechAuth.forService(SpeechConfig.oauthUrl(), SpeechConfig.oauthScope(), 
                 SpeechConfig.oauthKey(), SpeechConfig.oauthSecret());
         auth.fetchTo(new OAuthResponseListener());
-        speakButton.setText(R.string.speak_wait);
-        speakButton.setEnabled(false);
+        heartSpeakButton.setEnabled(false);
     }
     
     /**
@@ -541,8 +530,7 @@ public class SimpleSpeechActivityDemo extends Activity {
             if (token != null) {
                 oauthToken = token;
                 readyForSpeech();
-                speakButton.setText(R.string.speak);
-                speakButton.setEnabled(true);
+                heartSpeakButton.setEnabled(true);
             }
             else {
                 Log.v("SimpleSpeech", "OAuth error: "+error);

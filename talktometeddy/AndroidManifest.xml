@@ -29,11 +29,6 @@
                 android:label="@string/app_name_activity"
                 android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale"
                 />
-        <activity
-                android:name="example.simplespeech.SimpleSpeechServiceDemo"
-                android:label="@string/app_name_service"
-                android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale"
-                />
         <!-- The following entry is needed for apps that use ATTSpeechActivity -->
         <activity
                 android:name="com.att.android.speech.ATTSpeechActivity"
