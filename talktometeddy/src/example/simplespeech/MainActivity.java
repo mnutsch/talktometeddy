@@ -22,7 +22,12 @@ public class MainActivity extends ListActivity
         // Display the list of sample activities in a standard Android layout.
 
         activities = new Item[] {
+<<<<<<< HEAD
                 new Item(new Intent(this, StartScreenActivity.class), getString(R.string.app_name_launch_screen))
+=======
+                new Item(new Intent(this, StartScreenActivity.class),
+                        getString(R.string.app_name_launch_screen))
+>>>>>>> 282c3b9cf3071ae0f33e2613a3c01e96cc10f92e
         };
 
         startActivity(activities[0].intent);

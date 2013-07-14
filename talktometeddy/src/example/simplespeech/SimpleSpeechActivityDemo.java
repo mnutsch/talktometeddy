@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.example.talktometeddy.R;
 
+<<<<<<< HEAD
 
 
 public class SimpleSpeechActivityDemo extends Activity implements OnInitListener {
@@ -44,6 +45,27 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private WebView webView = null;
     
     private TextToSpeech tts;
+    
+    private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
+=======
+/**
+ * SimpleSpeech is a very basic demonstration of using the ATTSpeechKit 
+ * to do voice recognition.  It is designed to introduce a developer to making 
+ * a new application that uses the AT&T SpeechKit Android library.  
+ * It also documents some of the more basic Android methods for those developers 
+ * that are new to Android as well.
+ * 
+ * As with all apps that use the ATTSpeechActivity, make sure the manifest file 
+ * includes a reference to the activity:
+ *         <activity android:name="com.att.android.speech.ATTSpeechActivity"
+ *          android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+**/
+public class SimpleSpeechActivityDemo extends Activity {
+    private ImageButton heartSpeakButton = null;
+    private String oauthToken = null;
+    private TTSClient ttsClient = null;
+    private AudioPlayer audioPlayer = null;
+>>>>>>> 282c3b9cf3071ae0f33e2613a3c01e96cc10f92e
     
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
     
@@ -114,7 +136,21 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         
         setContentView(R.layout.speech);
         
+<<<<<<< HEAD
         tts = new TextToSpeech(this, this);
+=======
+     // A simple UI-less player for the TTS audio.
+        audioPlayer = new AudioPlayer(this);
+        
+        // This is the Speak button that the user presses to start a speech
+        // interaction.
+        //speakButton = (Button)findViewById(R.id.heartSpeakButton);
+        //speakButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                startSpeechActivity();
+//            }
+//        });
+>>>>>>> 282c3b9cf3071ae0f33e2613a3c01e96cc10f92e
         
         heartSpeakButton = (ImageButton)findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
@@ -137,13 +173,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 				}
 			}
         });
-        
-        // This will show the recognized text.
-        resultView = (TextView)findViewById(R.id.result);
-        
-        // This will show a website receiving the recognized text.
-        webView = (WebView)findViewById(R.id.webview);
-        configureWebView();
+
     }
     
     @Override
@@ -196,7 +226,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		String displaystring;
 		Toast toast = Toast.makeText(this, resultText, duration);
 	  	toast.show();
-        resultView.setText("Teddy heard \""+resultText+"\"");
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(resultText);
         String myurl = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"&key="+apikey+
@@ -409,17 +438,53 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		}
     }
     
-    /** Configure the webview that displays websites with the recognition text. **/
-    private void configureWebView() {
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false; // Let the webview display the URL
-            }
-        });
+//    /** Configure the webview that displays websites with the recognition text. **/
+//    private void configureWebView() {
+//        webView.getSettings().setJavaScriptEnabled(true);
+//        webView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                return false; // Let the webview display the URL
+//            }
+//        });
+//    }
+    
+<<<<<<< HEAD
+=======
+    /**
+     * Start an asynchronous OAuth credential check. 
+     * Disables the Speak button until the check is complete.
+    **/
+    private void validateOAuth() {
+        SpeechAuth auth = 
+            SpeechAuth.forService(SpeechConfig.oauthUrl(), SpeechConfig.oauthScope(), 
+                SpeechConfig.oauthKey(), SpeechConfig.oauthSecret());
+        auth.fetchTo(new OAuthResponseListener());
+        heartSpeakButton.setEnabled(false);
     }
     
+    /**
+     * Handle the result of an asynchronous OAuth check.
+    **/
+    private class OAuthResponseListener implements SpeechAuth.Client {
+        public void 
+        handleResponse(String token, Exception error)
+        {
+            if (token != null) {
+                oauthToken = token;
+                readyForSpeech();
+                heartSpeakButton.setEnabled(true);
+            }
+            else {
+                Log.v("SimpleSpeech", "OAuth error: "+error);
+                // There was either a network error or authentication error.
+                // Show alert for the latter.
+                alert("Speech Unavailable", 
+                    "This app was rejected by the speech service.  Contact the developer for an update.");
+            }
+        }
+    }
+>>>>>>> 282c3b9cf3071ae0f33e2613a3c01e96cc10f92e
     
     /**
      * When the app is authenticated with the Speech API, 
