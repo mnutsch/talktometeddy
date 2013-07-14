@@ -392,7 +392,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 				//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
 				this.startTTS(this.task7A);
 			}
-			else if(matchingprompt.compareTo(this.task8Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task8Q_decoded) == 0)
 			{
 				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -412,32 +412,32 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task9Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task9Q_decoded) == 0)
 			{
 				this.startTTS(this.task9A1);
 		    	
 			}
-			else if(matchingprompt.compareTo(this.task10Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task10Q_decoded) == 0)
 			{
 				this.startTTS(this.task10A1);
 		    	
 			}
-			else if(matchingprompt.compareTo(this.task11Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task11Q_decoded) == 0)
 			{
 				this.startTTS(this.task11A1);
 		    	
 			}
-			else if(matchingprompt.compareTo(this.task12Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task12Q_decoded) == 0)
 			{
 				this.startTTS(this.task12A1);
 		    	
 			}
-			else if(matchingprompt.compareTo(this.task13Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task13Q_decoded) == 0)
 			{
 				this.startTTS(this.task13A1);
 		    	
 			}
-			else if(matchingprompt.compareTo(this.task14Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task14Q_decoded) == 0)
 			{
 				this.startTTS(this.task14A1);
 		    	
