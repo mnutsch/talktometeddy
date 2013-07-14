@@ -42,7 +42,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
     
     // strings for Teddy
-    private String greeting1 = "Hey Kid dough! Press my heart and talk to me.";
+    private String greeting1 = "Hey Kido! Press my heart and talk to me.";
     private String greeting2 = "Hey there! Press my heart and talk to me.";
     private String greeting3 = "Hello! Press my heart and talk to me.";
     
