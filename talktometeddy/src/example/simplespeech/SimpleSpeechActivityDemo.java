@@ -45,8 +45,10 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String greeting1 = "Hey Kid dough! Press my heart and talk to me.";
     private String greeting2 = "Hey there! Press my heart and talk to me.";
     private String greeting3 = "Hello! Press my heart and talk to me.";
+    
     private String task1Q_encoded = "prime+colors";
     private String task1Q_decoded = "prime colors";
+    
     private String task1A1 = "The prime colors are red, blue and yellow.";
     private String task1A2 = "Combining the colors yellow and blue makes green.";
     private String task1A3 = "Mixing the colors red and blue makes purple.";
@@ -54,14 +56,12 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task2Q_encoded = "teach+count+numbers";
     private String task2Q_decoded = "teach count numbers";
     private String task2A1 = "Let's count to ten. One, two, three, four, five, six, seven, eight, nine, ten.";
-    private String task2A2 = "Let's count by twos. Two, four, six, eight, ten.";
-    private String task2A3 = "Let's count by prime numbers. One, two, three, five, seven, eleven, thirteen, seventeen, nineteen, twenty three.";
     
     private String task3Q_encoded = "sounds+do+animals+make";
     private String task3Q_decoded = "sounds do animals make";
-    private String task3A1 = "Let's talk about the sounds that animals make. The cow says Moo. The pig says Oink Oink.";
-    private String task3A2 = "Let's talk about the sounds that animals make. The cat says Meow. The dog says Woof Woof.";
-    private String task3A3 = "Let's talk about the sounds that animals make. The rooster says cockle doodle doo.";
+    private String task3A1 = "Let's talk about the sounds that animals make. The cow says Moo. The pig says Oink Oink. The cat says Meow. The dog says Woof Woof. The rooster says cockle doodle doo.";
+    private String task3A2 = "Let's talk about the sounds that animals make. The cat says Meow. The dog says Woof Woof. The cow says Moo. The pig says Oink Oink. The rooster says cockle doodle doo.";
+    private String task3A3 = "Let's talk about the sounds that animals make. The rooster says cockle doodle doo. The cat says Meow. The dog says Woof Woof. The cow says Moo. The pig says Oink Oink.";
     
     private String task4Q_encoded = "sing+me+a+song";
     private String task4Q_decoded = "sing me a song";
@@ -75,7 +75,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task5A2 = "Let's learn the alphabet. D for dog, E for elephant, F for frog.";
     private String task5A3 = "Let's learn the alphabet. G for goat, H is for happy, eye is for iguana.";
     
-    private String task6Q_encoded = "how+are+you";
+    private String task6Q_encoded = "what";
     private String task6Q_decoded = "how are you";
     private String task6A1 = "I'm great, thanks for asking!";
     private String task6A2 = "I'm happy! Today is a fun day!";
@@ -84,6 +84,36 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task7Q_encoded = "what+things+do+you+know";
     private String task7Q_decoded = "what things do you know";
     private String task7A = "I know colors, numbers, animal sounds, the alphabet and a song.";
+    
+    private String task8Q_encoded = "tell+me+a+funny+joke";
+    private String task8Q_decoded = "tell me a funny joke";
+    private String task8A1 = "Why do bees have sticky hair? Because they use honeycombs!";
+    private String task8B1 = "Why is six afraid of seven? Because seven eight nine!";
+    private String task8C1 = "What do call pig that knows karate? Porkchops!";
+    
+    private String task9Q_encoded = "what+is+your+name";
+    private String task9Q_decoded = "what is your name";
+    private String task9A1 = "My name is Talking Teddy!";
+    
+    private String task10Q_encoded = "how+old+are+you";
+    private String task10Q_decoded = "how old are you";
+    private String task10A1 = "I'm just one year older than you!";
+
+    private String task11Q_encoded = "who+is+your+best+friend";
+    private String task11Q_decoded = "who is  your best friend";
+    private String task11A1 = "You are my best friend!";
+
+    private String task12Q_encoded = "where+are+you+from";
+    private String task12Q_decoded = "where are you from";
+    private String task12A1 = "I was born in Seattle.";
+    
+    private String task13Q_encoded = "what+is+your+favorite+color";
+    private String task13Q_decoded = "what is your favorite color";
+    private String task13A1 = "I like a little bit of everything, so rainbow is my favorite color.";    
+
+    private String task14Q_encoded = "can+we+be+friends";
+    private String task14Q_decoded = "can we be friends";
+    private String task14A1 = "Of course. I'm already your friend!";  
     
     private String fallback1 = "I didn't understand you! Please say that again.";
     private String fallback2 = "Will you please say that again?";
@@ -189,7 +219,14 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         		"&sentence4="+this.task4Q_encoded+
         		"&sentence5="+this.task5Q_encoded+
         		"&sentence6="+this.task6Q_encoded+
-        		"&sentence7="+this.task7Q_encoded;
+        		"&sentence7="+this.task7Q_encoded+
+        		"&sentence8="+this.task8Q_encoded+
+        		"&sentence9="+this.task9Q_encoded+
+        		"&sentence10="+this.task10Q_encoded+
+        		"&sentence11="+this.task11Q_encoded+
+        		"&sentence12="+this.task12Q_encoded+
+        		"&sentence13="+this.task13Q_encoded+
+        		"&sentence14="+this.task14Q_encoded;
         
         //getting HTTP
 		
@@ -267,23 +304,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 			}
 			else if(matchingPrompt.compareTo(this.task2Q_decoded) == 0)
 			{
-				//webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
+				this.startTTS(this.task2A1);
 		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task2A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task2A2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task2A3);
-		    	}
-				
 			}
 			else if(matchingPrompt.compareTo(this.task3Q_decoded) == 0)
 			{
@@ -369,6 +391,56 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 			{
 				//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
 				this.startTTS(this.task7A);
+			}
+			else if(matchingprompt.compareTo(this.task8Q_decoded) == 0)
+			{
+				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
+				Random r = new Random();
+		    	int i1=r.nextInt(4-1) + 1;
+		    	
+		    	if(i1 == 1)
+		    	{
+		    		this.startTTS(this.task8A1);
+		    	}
+		    	else if(i1 == 2)
+		    	{
+		    		this.startTTS(this.task8B1);
+		    	}
+		    	if(i1 == 3)
+		    	{
+		    		this.startTTS(this.task8C1);
+		    	}
+				
+			}
+			else if(matchingprompt.compareTo(this.task9Q_decoded) == 0)
+			{
+				this.startTTS(this.task9A1);
+		    	
+			}
+			else if(matchingprompt.compareTo(this.task10Q_decoded) == 0)
+			{
+				this.startTTS(this.task10A1);
+		    	
+			}
+			else if(matchingprompt.compareTo(this.task11Q_decoded) == 0)
+			{
+				this.startTTS(this.task11A1);
+		    	
+			}
+			else if(matchingprompt.compareTo(this.task12Q_decoded) == 0)
+			{
+				this.startTTS(this.task12A1);
+		    	
+			}
+			else if(matchingprompt.compareTo(this.task13Q_decoded) == 0)
+			{
+				this.startTTS(this.task13A1);
+		    	
+			}
+			else if(matchingprompt.compareTo(this.task14Q_decoded) == 0)
+			{
+				this.startTTS(this.task14A1);
+		    	
 			}
 		}
 		catch (Exception e){
