@@ -25,10 +25,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -40,8 +36,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 	
     protected static final int RESULT_SPEECH = 1;
     private ImageButton heartSpeakButton = null;
-    private TextView resultView = null;
-    private WebView webView = null;
     
     private TextToSpeech tts;
     
@@ -96,11 +90,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String fallback3 = "I didn't understand you! What did you say?";
     
     //global variables specific to sentence recognition API
-  	static String matchingprompt;
-  	static String matchingpromptscore;
+  	public static String matchingPrompt;
+  	public static String matchingPromptScore;
   	
   	
-  	int duration = Toast.LENGTH_SHORT;
+  	private static final int TOAST_DURATION = Toast.LENGTH_SHORT;
 
   	
     
@@ -130,10 +124,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 				try {
 					startActivityForResult(intent, RESULT_SPEECH);
 				} catch (ActivityNotFoundException a) {
-					Toast t = Toast.makeText(getApplicationContext(),
-							"Ops! Your device doesn't support Speech to Text",
-							Toast.LENGTH_SHORT);
-					t.show();
+				    showToast("Ops! Your device doesn't support Speech to Text");
 				}
 			}
         });
@@ -170,15 +161,13 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         EasyTracker.getInstance().activityStart(this);//start Google Analytics API
         
         readyForSpeech();
-
     }
     
     
     /**
      * Stops any Text to Speech in progress.
     **/
-    private void
-    stopTTS()
+    private void stopTTS()
     {
     	tts.stop();
     }
@@ -186,16 +175,14 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     
 
     /** Make use of the recognition text in this app. **/
-    private void handleRecognition(String resultText) {
+    private void handleRecognition(String speechText) {
         // In this example, we set display the text in the result view
     	
-    	String mystring = "";
-		String displaystring;
-		Toast toast = Toast.makeText(this, resultText, duration);
-	  	toast.show();
+    	String rawXMLText = "";
+		showToast(speechText);
         // And then perform a search on a website using the text.
-        String query = URLEncoder.encode(resultText);
-        String myurl = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"&key="+apikey+
+        String query = URLEncoder.encode(speechText);
+        String recognitionURL = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"&key="+apikey+
         		"&sentence1="+this.task1Q_encoded+"" +
         		"&sentence2="+this.task2Q_encoded+
         		"&sentence3="+this.task3Q_encoded+
@@ -208,14 +195,14 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		
         URL url = null;
 		try {
-			url = new URL(myurl);
+			url = new URL(recognitionURL);
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	
         try {
-			mystring = convertStreamToString(url.openStream());
+			rawXMLText = convertStreamToString(url.openStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -226,7 +213,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         
 		  //parsing XML
 		  try {
-			parseXML(mystring);
+			parseXML(rawXMLText);
 		} catch (XmlPullParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -234,11 +221,10 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		displaystring = "Matching Prompt: " + matchingprompt + "\n" + "Score: " + matchingpromptscore;
+
         
 		try {
-			double promptScore = Double.parseDouble(matchingpromptscore);
+			double promptScore = Double.parseDouble(matchingPromptScore);
 			if(promptScore < 35)
 			{
 				//webView.loadData("I didn't understand you!", "text/html", "UTF-8");
@@ -259,7 +245,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task1Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task1Q_decoded) == 0)
 			{
 				//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -279,7 +265,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task2Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task2Q_decoded) == 0)
 			{
 				//webView.loadData(this.task2Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -299,7 +285,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task3Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task3Q_decoded) == 0)
 			{
 				//webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -319,7 +305,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task4Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task4Q_decoded) == 0)
 			{
 				//webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -339,7 +325,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task5Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task5Q_decoded) == 0)
 			{
 				//webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -359,7 +345,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task6Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task6Q_decoded) == 0)
 			{
 				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
 				Random r = new Random();
@@ -379,14 +365,14 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	}
 				
 			}
-			else if(matchingprompt.compareTo(this.task7Q_decoded) == 0)
+			else if(matchingPrompt.compareTo(this.task7Q_decoded) == 0)
 			{
 				//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
 				this.startTTS(this.task7A);
 			}
 		}
 		catch (Exception e){
-			Log.v("SimpleSpeech", "Matching Prompt Score in Exception Handler = ["+ matchingpromptscore + "]");
+			Log.v("SimpleSpeech", "Matching Prompt Score in Exception Handler = ["+ matchingPromptScore + "]");
 			this.startTTS(this.fallback1);
 		}	        
     }
@@ -404,43 +390,34 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 			tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null);
 		}
     }
-    
-//    /** Configure the webview that displays websites with the recognition text. **/
-//    private void configureWebView() {
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.setWebViewClient(new WebViewClient() {
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                return false; // Let the webview display the URL
-//            }
-//        });
-//    }
-    
-    
+
     /**
      * When the app is authenticated with the Speech API, 
      * enable the interface and speak out a greeting.
     **/
-    private void 
-    readyForSpeech() 
+    private void readyForSpeech()
     {
         // Make Text to Speech request that will speak out a greeting.
     	Random r = new Random();
     	int i1=r.nextInt(4-1) + 1;
+
+        String greeting = "";
     	
     	if(i1 == 1)
     	{
-    		startTTS(this.greeting1);
+    		greeting = this.greeting1;
     	}
     	else if(i1 == 2)
     	{
-    		startTTS(this.greeting2);
+    		greeting = this.greeting2;
     	}
     	if(i1 == 3)
     	{
-    		startTTS(this.greeting3);
+    		greeting = this.greeting3;
     	}
-    	
+
+        showToast(greeting);
+        startTTS(greeting);
     }
     
     
@@ -487,31 +464,31 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
   	              //System.out.println("End document");
   	          } else if(eventType == XmlPullParser.START_TAG) {
   	              //System.out.println("Start tag "+xpp.getName());
-  	        	  //matchingprompt = matchingprompt + xpp.getName() + "***\n";
+  	        	  //matchingPrompt = matchingPrompt + xpp.getName() + "***\n";
   	        	  name = xpp.getName();
   	        	  if (name.equalsIgnoreCase("matching_prompt"))
   	        	  {
   	        		  lastnamewasmatchingprompt = 1;
-  	        		  //matchingprompt = matchingprompt + "Matching Prompt Found!\n";
+  	        		  //matchingPrompt = matchingPrompt + "Matching Prompt Found!\n";
   	        	  }
   	        	  if (name.equalsIgnoreCase("matching_prompt_score"))
   	        	  {
   	        		  lastnamewasmatchingpromptscore = 1;
-  	        		  //matchingprompt = matchingprompt + "Matching Prompt Score Found!\n";
+  	        		  //matchingPrompt = matchingPrompt + "Matching Prompt Score Found!\n";
   	        	  }
   	          } else if(eventType == XmlPullParser.END_TAG) {
   	              //System.out.println("End tag "+xpp.getName());
   	          } else if(eventType == XmlPullParser.TEXT) {
   	              //System.out.println("Text "+xpp.getText());
-  	        	  //matchingprompt = matchingprompt + xpp.getName() + ": " + xpp.getText() + "\n";
+  	        	  //matchingPrompt = matchingPrompt + xpp.getName() + ": " + xpp.getText() + "\n";
   	        	  if(lastnamewasmatchingprompt == 1)
   	        	  {
-  	        		  matchingprompt = xpp.getText();
+  	        		  matchingPrompt = xpp.getText();
   	        		  lastnamewasmatchingprompt = 0;
   	        	  }
   	        	  if(lastnamewasmatchingpromptscore == 1)
   	        	  {
-  	        		  matchingpromptscore = xpp.getText();
+  	        		  matchingPromptScore = xpp.getText();
   	        		  lastnamewasmatchingpromptscore = 0;
   	        	  }
   	        	  
@@ -548,4 +525,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 	    super.onStop();
 	    EasyTracker.getInstance().activityStop(this); // Add this method.
 	}
+
+    private void showToast(String message) {
+        Toast toast = Toast.makeText(this, message, TOAST_DURATION);
+        toast.show();
+    }
+
+
 }
