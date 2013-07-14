@@ -387,6 +387,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		if (textToSpeak.length() == 0) {
 			tts.speak("You haven't typed text", TextToSpeech.QUEUE_FLUSH, null);
 		} else {
+            showToast(textToSpeak);
 			tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null);
 		}
     }
