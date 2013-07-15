@@ -6,7 +6,7 @@
 
     <uses-sdk
             android:minSdkVersion="8"
-            android:targetSdkVersion="8"/>
+            android:targetSdkVersion="17"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -19,7 +19,8 @@
         <activity
                 android:name="example.simplespeech.StartScreenActivity"
                 android:label="@string/app_name_launcher"
-                android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale">
+                android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -29,6 +30,7 @@
                 android:name="example.simplespeech.SimpleSpeechActivityDemo"
                 android:label="@string/app_name_activity"
                 android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale"
+                android:screenOrientation="portrait"
                 />
         <!-- The following entry is needed for apps that use ATTSpeechActivity -->
         <activity

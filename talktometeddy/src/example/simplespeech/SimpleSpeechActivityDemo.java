@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
-import java.net.MalformedURLException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -18,7 +20,11 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -38,12 +44,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private ImageButton heartSpeakButton = null;
     
     private TextToSpeech tts;
-    
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
     
     // strings for Teddy
     private String greeting1 = "Hey Kido! Press my belly and talk to me.";
-    private String greeting2 = "Hey there! Press my belly and talk to me.";
+    private String greeting2 = "Hey Buddy! Press my belly and talk to me.";
     private String greeting3 = "Hello! Press my belly and talk to me.";
     
     private String task1Q_encoded = "prime+colors";
@@ -212,7 +217,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private void handleRecognition(String speechText) {
         // In this example, we set display the text in the result view
     	
-    	String rawXMLText = "";
 		showToast(speechText);
         // And then perform a search on a website using the text.
         String query = URLEncoder.encode(speechText);
@@ -235,27 +239,88 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         
         //getting HTTP
 		
-        URL url = null;
-		try {
-			url = new URL(recognitionURL);
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		// Gets the URL from the UI's text field.
+        String stringUrl = recognitionURL;
+        ConnectivityManager connMgr = (ConnectivityManager) 
+            getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new DownloadWebpageTask().execute(stringUrl);
+        } else {
+        	showToast("No network connection available.");
+        }
+		
+    }
+    
+	 // Reads an InputStream and converts it to a String.
+	    public String readIt(InputStream is) throws IOException, UnsupportedEncodingException {
+	    	BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+	  	    StringBuilder sb = new StringBuilder();
+	  	    String line = null;
+
+	  	    while ((line = reader.readLine()) != null) {
+	  	        sb.append(line);
+	  	    }
+
+	  	    is.close();
+
+	  	    return sb.toString();
+	    }
+    
+	 // Given a URL, establishes an HttpUrlConnection and retrieves
+	 // the web page content as a InputStream, which it returns as
+	 // a string.
+	 private String downloadUrl(String myurl) throws IOException {
+	     InputStream is = null;
+	     // Only display the first 500 characters of the retrieved
+	     // web page content.
+
+	     try {
+	         URL url = new URL(myurl);
+	         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	         conn.setReadTimeout(10000 /* milliseconds */);
+	         conn.setConnectTimeout(15000 /* milliseconds */);
+	         conn.setRequestMethod("GET");
+	         conn.setDoInput(true);
+	         // Starts the query
+	         conn.connect();
+	         is = conn.getInputStream();
 	
-        try {
-			rawXMLText = convertStreamToString(url.openStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-		  //parsing XML
-		  try {
-			parseXML(rawXMLText);
+	         // Convert the InputStream into a string
+	         String contentAsString = readIt(is);
+	         return contentAsString;
+	         
+	     // Makes sure that the InputStream is closed after the app is
+	     // finished using it.
+	     } finally {
+	         if (is != null) {
+	             is.close();
+	         } 
+	     }
+	 }
+    
+    // Uses AsyncTask to create a task away from the main UI thread. This task takes a 
+    // URL string and uses it to create an HttpUrlConnection. Once the connection
+    // has been established, the AsyncTask downloads the contents of the webpage as
+    // an InputStream. Finally, the InputStream is converted into a string, which is
+    // displayed in the UI by the AsyncTask's onPostExecute method.
+    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+       @Override
+       protected String doInBackground(String... urls) {
+             
+           // params comes from the execute() call: params[0] is the url.
+           try {
+               return downloadUrl(urls[0]);
+           } catch (IOException e) {
+               return "Unable to retrieve web page. URL may be invalid.";
+           }
+       }
+       // onPostExecute displays the results of the AsyncTask.
+       @Override
+       protected void onPostExecute(String result) {
+    	   try {
+			parseXML(result);
+			generateOutput();
 		} catch (XmlPullParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -263,207 +328,195 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-        
-		try {
-			double promptScore = Double.parseDouble(matchingPromptScore);
-			if(promptScore < 35)
-			{
-				//webView.loadData("I didn't understand you!", "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.fallback1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.fallback2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.fallback3);
-		    	}
-		    					
-			}
-			else if(matchingPrompt.compareTo(this.task1Q_decoded) == 0)
-			{
-				//webView.loadData(this.task1Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task1A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task1A2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task1A3);
-		    	}
-				
-			}
-			else if(matchingPrompt.compareTo(this.task2Q_decoded) == 0)
-			{
-				this.startTTS(this.task2A1);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task3Q_decoded) == 0)
-			{
-				//webView.loadData(this.task3Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task3A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task3A2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task3A3);
-		    	}
-				
-			}
-			else if(matchingPrompt.compareTo(this.task4Q_decoded) == 0)
-			{
-				//webView.loadData(this.task4Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task4A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task4A2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task4A3);
-		    	}
-				
-			}
-			else if(matchingPrompt.compareTo(this.task5Q_decoded) == 0)
-			{
-				//webView.loadData(this.task5Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task5A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task5A2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task5A3);
-		    	}
-				
-			}
-			else if(matchingPrompt.compareTo(this.task6Q_decoded) == 0)
-			{
-				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task6A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task6A2);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task6A3);
-		    	}
-				
-			}
-			else if(matchingPrompt.compareTo(this.task7Q_decoded) == 0)
-			{
-				//webView.loadData(this.task7Q_decoded, "text/html", "UTF-8");
-				this.startTTS(this.task7A);
-			}
-			else if(matchingPrompt.compareTo(this.task8Q_decoded) == 0)
-			{
-				//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
-				Random r = new Random();
-		    	int i1=r.nextInt(4-1) + 1;
-		    	
-		    	if(i1 == 1)
-		    	{
-		    		this.startTTS(this.task8A1);
-		    	}
-		    	else if(i1 == 2)
-		    	{
-		    		this.startTTS(this.task8B1);
-		    	}
-		    	if(i1 == 3)
-		    	{
-		    		this.startTTS(this.task8C1);
-		    	}
-				
-			}
-			else if(matchingPrompt.compareTo(this.task9Q_decoded) == 0)
-			{
-				this.startTTS(this.task9A);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task10Q_decoded) == 0)
-			{
-				this.startTTS(this.task10A);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task11Q_decoded) == 0)
-			{
-				this.startTTS(this.task11A);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task12Q_decoded) == 0)
-			{
-				this.startTTS(this.task12A);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task13Q_decoded) == 0)
-			{
-				this.startTTS(this.task13A);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task14Q_decoded) == 0)
-			{
-				this.startTTS(this.task14A);
-		    	
-			}
-			else if(matchingPrompt.compareTo(this.task15Q_decoded) == 0)
-			{
-				this.startTTS(this.task15A);
-		    	
-			}
-			else
-			{
-				this.startTTS(this.task7A);
-			}
-		}
-		catch (Exception e){
-			Log.v("SimpleSpeech", "Matching Prompt Score in Exception Handler = ["+ matchingPromptScore + "]");
-			this.startTTS(this.fallback1);
-		}	        
-    }
+      }
+   }
     
-
+    private void generateOutput()
+    {
+    	double promptScore = Double.parseDouble(matchingPromptScore);
+		if(promptScore < 35)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.fallback1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.fallback2);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.fallback3);
+	    	}
+	    					
+		}
+		else if(matchingPrompt.compareTo(this.task1Q_decoded) == 0)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task1A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task1A2);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task1A3);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task2Q_decoded) == 0)
+		{
+			this.startTTS(this.task2A1);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task3Q_decoded) == 0)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task3A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task3A2);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task3A3);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task4Q_decoded) == 0)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task4A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task4A2);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task4A3);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task5Q_decoded) == 0)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task5A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task5A2);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task5A3);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task6Q_decoded) == 0)
+		{
+			//webView.loadData(this.task6Q_decoded, "text/html", "UTF-8");
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task6A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task6A2);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task6A3);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task7Q_decoded) == 0)
+		{
+			this.startTTS(this.task7A);
+		}
+		else if(matchingPrompt.compareTo(this.task8Q_decoded) == 0)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task8A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task8B1);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task8C1);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task9Q_decoded) == 0)
+		{
+			this.startTTS(this.task9A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task10Q_decoded) == 0)
+		{
+			this.startTTS(this.task10A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task11Q_decoded) == 0)
+		{
+			this.startTTS(this.task11A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task12Q_decoded) == 0)
+		{
+			this.startTTS(this.task12A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task13Q_decoded) == 0)
+		{
+			this.startTTS(this.task13A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task14Q_decoded) == 0)
+		{
+			this.startTTS(this.task14A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task15Q_decoded) == 0)
+		{
+			this.startTTS(this.task15A);
+	    	
+		}
+		else
+		{
+			this.startTTS(this.task7A);
+		}
+	}
     
     /**
      * Start a TTS request to speak the argument.
@@ -507,23 +560,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         startTTS(greeting);
         showToast(greeting);
     }
-    
-    
-  //get HTTP
-  	public static String convertStreamToString(InputStream is) throws Exception {
-  	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-  	    StringBuilder sb = new StringBuilder();
-  	    String line = null;
-
-  	    while ((line = reader.readLine()) != null) {
-  	        sb.append(line);
-  	    }
-
-  	    is.close();
-
-  	    return sb.toString();
-  	}
-    
+  	
   //parse XML
   	public static void parseXML (String xmlinput)
   	         throws XmlPullParserException, IOException
@@ -583,7 +620,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
   	          }
   	          eventType = xpp.next();
   	         }
-  	     
   	         
   	     }
 
@@ -613,6 +649,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 	    super.onStop();
 	    EasyTracker.getInstance().activityStop(this); // Add this method.
 	}
+	
 
     private void showToast(String message) {
         Toast toast = Toast.makeText(this, message, TOAST_DURATION);
