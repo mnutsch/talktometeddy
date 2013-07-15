@@ -48,7 +48,7 @@ public class StartScreenActivity extends Activity{
                 //}
 
             }
-        }, 5000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
+        }, 1000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
         //startActivity(new Intent(StartScreenActivity.this, SimpleSpeechActivityDemo.class));
 
         // A simple UI-less player for the TTS audio.

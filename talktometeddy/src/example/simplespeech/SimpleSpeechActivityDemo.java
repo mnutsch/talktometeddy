@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -76,15 +75,15 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     
     private String task5Q_encoded = "teach+me+alphabet";
     private String task5Q_decoded = "teach me alphabet";
-    private String task5A1 = "Let's learn the alphabet. A for apple, B for ball, C for cat.";
-    private String task5A2 = "Let's learn the alphabet. D for dog, E for elephant, F for frog.";
-    private String task5A3 = "Let's learn the alphabet. G for goat, H is for happy, I is for iguana.";
+    private String task5A1 = "Let's learn A to K. A for apple, B for ball, C for cat. D for dog, E for elephant, F for frog. G for Goat. H for House, I for Ice crem. J for , K for King";
+    private String task5A2 = "Let's learn L to R. L for lemon, M for monkey, N for number, O for open, P for people, Q for queen, R for Red";
+    private String task5A3 = "Let's learn S to Z. S for summer, T for time, U for Uniform, V for Visa, W for woman, X for x-ray, Y for yellow, Z for Zebra";
     
     private String task6Q_encoded = "Hi+Talking+Teddy";
     private String task6Q_decoded = "Hi Talking Teddy";
-    private String task6A1 = "Hey Kido! Press my belly and talk to me.";
-    private String task6A2 = "Hey there! Press my belly and talk to me.";
-    private String task6A3 = "Hello! Press my belly and talk to me.";
+    private String task6A1 = "Hey Kido! Would you like to hear a joke or a song?";
+    private String task6A2 = "Hey there! What would  you like to learn today?";
+    private String task6A3 = "Hello! I can make animal sounds.";
     
     private String task7Q_encoded = "what+do+you+know";
     private String task7Q_decoded = "what do you know";
@@ -124,6 +123,16 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task15Q_decoded = "i love you teddy";
     private String task15A = "I love you too. You are my best friend!";
     
+    private String task16Q_encoded = "pretty+good+awesome";
+    private String task16Q_decoded = "pretty good awesome";
+    private String task16A1 = "Thanks! I'm working towards that.";
+    private String task16B1 = "I certainly hope you think so.";
+    private String task16C1 = "You're not so bad yourself.";
+    
+    private String task17Q_encoded = "stupid+dumb";
+    private String task17Q_decoded = "stupid dumb";
+    private String task17A = "Hey, be nice. I've feelings you know!";
+    
     private String fallback1 = "I didn't understand you! Please say that again.";
     private String fallback2 = "Will you please say that again?";
     private String fallback3 = "I didn't understand you! What did you say?";
@@ -131,12 +140,9 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     //global variables specific to sentence recognition API
   	public static String matchingPrompt;
   	public static String matchingPromptScore;
-  	
-  	
+  	  	
   	private static final int TOAST_DURATION = Toast.LENGTH_SHORT;
 
-  	
-    
     /** 
      * Called when the activity is first created.  This is where we'll hook up 
      * our views in XML layout files to our application.
@@ -199,7 +205,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         
         EasyTracker.getInstance().activityStart(this);//start Google Analytics API
         
-        readyForSpeech();
     }
     
     
@@ -235,7 +240,9 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         		"&sentence12="+this.task12Q_encoded+
         		"&sentence13="+this.task13Q_encoded+
         		"&sentence14="+this.task14Q_encoded+
-        		"&sentence15="+this.task15Q_encoded;
+        		"&sentence15="+this.task15Q_encoded+
+        		"&sentence16="+this.task16Q_encoded+
+        		"&sentence17="+this.task17Q_encoded;
         
         //getting HTTP
 		
@@ -510,6 +517,30 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		else if(matchingPrompt.compareTo(this.task15Q_decoded) == 0)
 		{
 			this.startTTS(this.task15A);
+	    	
+		}
+		else if(matchingPrompt.compareTo(this.task16Q_decoded) == 0)
+		{
+			Random r = new Random();
+	    	int i1=r.nextInt(4-1) + 1;
+	    	
+	    	if(i1 == 1)
+	    	{
+	    		this.startTTS(this.task16A1);
+	    	}
+	    	else if(i1 == 2)
+	    	{
+	    		this.startTTS(this.task16B1);
+	    	}
+	    	if(i1 == 3)
+	    	{
+	    		this.startTTS(this.task16C1);
+	    	}
+			
+		}
+		else if(matchingPrompt.compareTo(this.task17Q_decoded) == 0)
+		{
+			this.startTTS(this.task17A);
 	    	
 		}
 		else
