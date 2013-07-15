@@ -87,7 +87,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     
     private String task7Q_encoded = "what+do+you+know";
     private String task7Q_decoded = "what do you know";
-    private String task7A = "I know a about colors, numbers, animal sounds, the alphabet, funny jokes and songs.";
+    private String task7A = "Teddy knows a little about colors, numbers, animal sounds, the alphabet, funny jokes and songs.";
     
     private String task8Q_encoded = "tell+me+a+funny+joke";
     private String task8Q_decoded = "tell me a funny joke";
@@ -255,6 +255,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             new DownloadWebpageTask().execute(stringUrl);
         } else {
         	showToast("No network connection available.");
+        	this.startTTS("Teddy needs internet connection to work properly.");
         }
 		
     }
