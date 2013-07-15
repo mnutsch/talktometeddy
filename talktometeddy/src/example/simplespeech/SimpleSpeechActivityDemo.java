@@ -42,9 +42,9 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
     
     // strings for Teddy
-    private String greeting1 = "Hey Kido! Press my heart and talk to me.";
-    private String greeting2 = "Hey there! Press my heart and talk to me.";
-    private String greeting3 = "Hello! Press my heart and talk to me.";
+    private String greeting1 = "Hey Kido! Press my belly and talk to me.";
+    private String greeting2 = "Hey there! Press my belly and talk to me.";
+    private String greeting3 = "Hello! Press my belly and talk to me.";
     
     private String task1Q_encoded = "prime+colors";
     private String task1Q_decoded = "prime colors";
@@ -71,49 +71,53 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     
     private String task5Q_encoded = "teach+me+alphabet";
     private String task5Q_decoded = "teach me alphabet";
-    private String task5A1 = "Let's learn the alphabet. Ei for apple, B for ball, C for cat.";
+    private String task5A1 = "Let's learn the alphabet. A for apple, B for ball, C for cat.";
     private String task5A2 = "Let's learn the alphabet. D for dog, E for elephant, F for frog.";
-    private String task5A3 = "Let's learn the alphabet. G for goat, H is for happy, eye is for iguana.";
+    private String task5A3 = "Let's learn the alphabet. G for goat, H is for happy, I is for iguana.";
     
-    private String task6Q_encoded = "what";
-    private String task6Q_decoded = "how are you";
-    private String task6A1 = "I'm great, thanks for asking!";
-    private String task6A2 = "I'm happy! Today is a fun day!";
-    private String task6A3 = "Yawn... I'm sleepy. Let's take a nap.";
+    private String task6Q_encoded = "Hi+Talking+Teddy";
+    private String task6Q_decoded = "Hi Talking Teddy";
+    private String task6A1 = "Hey Kido! Press my belly and talk to me.";
+    private String task6A2 = "Hey there! Press my belly and talk to me.";
+    private String task6A3 = "Hello! Press my belly and talk to me.";
     
-    private String task7Q_encoded = "what+things+do+you+know";
-    private String task7Q_decoded = "what things do you know";
-    private String task7A = "I know colors, numbers, animal sounds, the alphabet and a song.";
+    private String task7Q_encoded = "what+do+you+know";
+    private String task7Q_decoded = "what do you know";
+    private String task7A = "I know a about colors, numbers, animal sounds, the alphabet, funny jokes and songs.";
     
     private String task8Q_encoded = "tell+me+a+funny+joke";
     private String task8Q_decoded = "tell me a funny joke";
     private String task8A1 = "Why do bees have sticky hair? Because they use honeycombs!";
     private String task8B1 = "Why is six afraid of seven? Because seven eight nine!";
-    private String task8C1 = "What do call pig that knows karate? Porkchops!";
+    private String task8C1 = "What do call pig that knows karate? Pork chops!";
     
     private String task9Q_encoded = "what+is+your+name";
     private String task9Q_decoded = "what is your name";
-    private String task9A1 = "My name is Talking Teddy!";
+    private String task9A = "My name is Talking Teddy!";
     
     private String task10Q_encoded = "how+old+are+you";
     private String task10Q_decoded = "how old are you";
-    private String task10A1 = "I'm just one year older than you!";
+    private String task10A = "I'm just couple years older than you!";
 
     private String task11Q_encoded = "who+is+your+best+friend";
     private String task11Q_decoded = "who is  your best friend";
-    private String task11A1 = "You are my best friend!";
+    private String task11A = "You are my best friend!";
 
     private String task12Q_encoded = "where+are+you+from";
     private String task12Q_decoded = "where are you from";
-    private String task12A1 = "I was born in Seattle.";
+    private String task12A = "I was born in Seattle, Washington.";
     
-    private String task13Q_encoded = "what+is+your+favorite+color";
-    private String task13Q_decoded = "what is your favorite color";
-    private String task13A1 = "I like a little bit of everything, so rainbow is my favorite color.";    
+    private String task13Q_encoded = "favorite+color";
+    private String task13Q_decoded = "favorite color";
+    private String task13A = "I like a little bit of everything, so rainbow is my favorite color.";    
 
     private String task14Q_encoded = "can+we+be+friends";
     private String task14Q_decoded = "can we be friends";
-    private String task14A1 = "Of course. I'm already your friend!";  
+    private String task14A = "Of course. I'm already your friend!";  
+    
+    private String task15Q_encoded = "i+love+you+teddy";
+    private String task15Q_decoded = "i love you teddy";
+    private String task15A = "I love you too. You are my best friend!";
     
     private String fallback1 = "I didn't understand you! Please say that again.";
     private String fallback2 = "Will you please say that again?";
@@ -226,7 +230,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         		"&sentence11="+this.task11Q_encoded+
         		"&sentence12="+this.task12Q_encoded+
         		"&sentence13="+this.task13Q_encoded+
-        		"&sentence14="+this.task14Q_encoded;
+        		"&sentence14="+this.task14Q_encoded+
+        		"&sentence15="+this.task15Q_encoded;
         
         //getting HTTP
 		
@@ -280,7 +285,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		    	{
 		    		this.startTTS(this.fallback3);
 		    	}
-				
+		    					
 			}
 			else if(matchingPrompt.compareTo(this.task1Q_decoded) == 0)
 			{
@@ -414,33 +419,42 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 			}
 			else if(matchingPrompt.compareTo(this.task9Q_decoded) == 0)
 			{
-				this.startTTS(this.task9A1);
+				this.startTTS(this.task9A);
 		    	
 			}
 			else if(matchingPrompt.compareTo(this.task10Q_decoded) == 0)
 			{
-				this.startTTS(this.task10A1);
+				this.startTTS(this.task10A);
 		    	
 			}
 			else if(matchingPrompt.compareTo(this.task11Q_decoded) == 0)
 			{
-				this.startTTS(this.task11A1);
+				this.startTTS(this.task11A);
 		    	
 			}
 			else if(matchingPrompt.compareTo(this.task12Q_decoded) == 0)
 			{
-				this.startTTS(this.task12A1);
+				this.startTTS(this.task12A);
 		    	
 			}
 			else if(matchingPrompt.compareTo(this.task13Q_decoded) == 0)
 			{
-				this.startTTS(this.task13A1);
+				this.startTTS(this.task13A);
 		    	
 			}
 			else if(matchingPrompt.compareTo(this.task14Q_decoded) == 0)
 			{
-				this.startTTS(this.task14A1);
+				this.startTTS(this.task14A);
 		    	
+			}
+			else if(matchingPrompt.compareTo(this.task15Q_decoded) == 0)
+			{
+				this.startTTS(this.task15A);
+		    	
+			}
+			else
+			{
+				this.startTTS(this.task7A);
 			}
 		}
 		catch (Exception e){
@@ -459,8 +473,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 		if (textToSpeak.length() == 0) {
 			tts.speak("You haven't typed text", TextToSpeech.QUEUE_FLUSH, null);
 		} else {
-            showToast(textToSpeak);
 			tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null);
+			showToast(textToSpeak);
 		}
     }
 
@@ -489,8 +503,9 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     		greeting = this.greeting3;
     	}
 
-        showToast(greeting);
+        
         startTTS(greeting);
+        showToast(greeting);
     }
     
     
