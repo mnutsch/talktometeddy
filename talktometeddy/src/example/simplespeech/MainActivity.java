@@ -6,23 +6,21 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import com.example.talktometeddy.R;
 
 /**
  * A simple activity launcher.
- **/
-public class MainActivity extends ListActivity
-{
+ */
+public class MainActivity extends ListActivity {
     /**
      * Display a list of sample activities.
-     **/
+     */
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
         // Display the list of sample activities in a standard Android layout.
 
-        activities = new Item[] {
+        activities = new Item[]{
                 new Item(new Intent(this, StartScreenActivity.class),
                         getString(R.string.app_name_launch_screen))
 
@@ -33,14 +31,18 @@ public class MainActivity extends ListActivity
 
     /**
      * Represents an activity for the list view.
-     **/
+     */
     private class Item {
         final Intent intent;
         final String title;
+
         Item(Intent intent, String title) {
-            this.intent = intent; this.title = title;
+            this.intent = intent;
+            this.title = title;
         }
-        @Override public String toString() {
+
+        @Override
+        public String toString() {
             return title;
         }
     }

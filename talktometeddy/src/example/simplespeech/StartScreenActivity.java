@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import com.example.talktometeddy.R;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,13 +12,13 @@ import com.example.talktometeddy.R;
  * Time: 3:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StartScreenActivity extends Activity{
+public class StartScreenActivity extends Activity {
 
 
     /**
      * Called when the activity is first created.  This is where we'll hook up
      * our views in XML layout files to our application.
-     **/
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

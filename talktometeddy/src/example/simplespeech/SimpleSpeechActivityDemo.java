@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import com.example.talktometeddy.R;
 import com.google.analytics.tracking.android.EasyTracker;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -143,7 +142,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String fallback3 = "I didn't understand you! What did you say?";
 
     //parse XML
-    public static void parseXML(String xmlinput)
+    public static void parseXML(String xmlInput)
             throws XmlPullParserException, IOException {
         int lastNameWasMatchingPrompt = 0;
         int lastNameWasMatchingPromptScore = 0;
@@ -155,7 +154,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         factory.setNamespaceAware(true);
         XmlPullParser xpp = factory.newPullParser();
 
-        xpp.setInput(new StringReader(xmlinput));
+        xpp.setInput(new StringReader(xmlInput));
 
 
         int eventType = xpp.getEventType();
@@ -195,8 +194,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             }
             eventType = xpp.next();
         }
-
-
     }
 
     /**
