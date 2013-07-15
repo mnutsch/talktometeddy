@@ -224,6 +224,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     	
 		showToast(speechText);
         // And then perform a search on a website using the text.
+        // TODO: change the deprecated encode to something like URLEncoder.encode("Hello World", "UTF-8")
         String query = URLEncoder.encode(speechText);
         String recognitionURL = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="+query+"&key="+apikey+
         		"&sentence1="+this.task1Q_encoded+"" +
@@ -590,7 +591,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
         
         startTTS(greeting);
-        showToast(greeting);
     }
   	
   //parse XML
@@ -652,6 +652,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
   	          }
   	          eventType = xpp.next();
   	         }
+  	     
   	         
   	     }
 
