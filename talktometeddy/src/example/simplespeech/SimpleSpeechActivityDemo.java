@@ -580,6 +580,21 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         EasyTracker.getInstance().activityStop(this); // Add this method.
     }
 
+    @Override
+    public void onDestroy() {
+        /**
+         * Properly close the TTS when the activity is destroyed.
+         */
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+            Log.d("TTS", "TTS Destroyed");
+        }
+
+        super.onDestroy();
+
+    }
+
     /**
      * Shows a toast containing specified text.
      *
