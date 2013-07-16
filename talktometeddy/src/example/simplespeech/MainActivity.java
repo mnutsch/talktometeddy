@@ -8,22 +8,19 @@ import android.view.View;
 import android.widget.ListView;
 
 /**
- * A simple activity launcher.
+ * Activity launcher.
  */
 public class MainActivity extends ListActivity {
     /**
-     * Display a list of sample activities.
+     * start launch screen activity initialization.
      */
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        // Display the list of sample activities in a standard Android layout.
-
         activities = new Item[]{
                 new Item(new Intent(this, StartScreenActivity.class),
                         getString(R.string.app_name_launch_screen))
-
         };
 
         startActivity(activities[0].intent);

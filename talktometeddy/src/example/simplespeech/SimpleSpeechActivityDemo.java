@@ -38,7 +38,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     protected static final int RESULT_SPEECH = 1;
     private static final int TOAST_DURATION = Toast.LENGTH_SHORT;
 
-
     //global variables specific to sentence recognition API
     public static String matchingPrompt;
     public static String matchingPromptScore;
@@ -96,7 +95,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task8Q_decoded = "tell me a funny joke";
     private String task8A1 = "Why do bees have sticky hair? Because they use honeycombs!";
     private String task8B1 = "Why is six afraid of seven? Because seven eight nine!";
-    private String task8C1 = "What do call pig that knows karate? Pork chops!";
+    private String task8C1 = "What do you call a pig that knows karate? Pork chops!";
 
     private String task9Q_encoded = "what+is+your+name";
     private String task9Q_decoded = "what is your name";
@@ -222,7 +221,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
                 try {
                     startActivityForResult(intent, RESULT_SPEECH);
                 } catch (ActivityNotFoundException a) {
-                    showToast("Ops! Your device doesn't support Speech to Text");
+                    showToast("Oops! Your device doesn't support Speech to Text");
                 }
             }
         });
@@ -518,12 +517,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     /**
      * Speaks the given text.
      * If text is empty, speak "You haven't typed text".
-     *
      * @param textToSpeak the text to be spoken.
      */
     private void startTTS(String textToSpeak) {
         if (textToSpeak.length() == 0) {
-            tts.speak("You haven't typed text", TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak("No text received!", TextToSpeech.QUEUE_FLUSH, null);
         } else {
             tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null);
             showToast(textToSpeak);
