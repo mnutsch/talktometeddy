@@ -142,6 +142,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String fallback1 = "I didn't understand you! Please say that again.";
     private String fallback2 = "Will you please say that again?";
     private String fallback3 = "I didn't understand you! What did you say?";
+    private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
 
     //parse XML
     public static void parseXML(String xmlInput)
@@ -277,6 +278,10 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      * Stops any Text to Speech in progress.
      */
     private void stopTTS() {
+        if (downloadWebpageTask != null) {
+            downloadWebpageTask.cancel(true);
+            showToast("Thinking Interrupted.");
+        }
         tts.stop();
     }
 
@@ -318,7 +323,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
         	showToast("Thinking...");
-            new DownloadWebpageTask().execute(recognitionURL);
+            downloadWebpageTask = new DownloadWebpageTask();
+            downloadWebpageTask.execute(recognitionURL);
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
         }
@@ -649,7 +655,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      * displayed in the UI by the AsyncTask's onPostExecute method.
      */
     private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
-
 
         @Override
         protected String doInBackground(String... urls) {
