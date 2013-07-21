@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
-
+import com.google.code.chatterbotapi.*;
 
 public class SimpleSpeechActivityDemo extends Activity implements OnInitListener {
 
@@ -48,6 +48,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private ImageButton heartSpeakButton = null;
 
     private TextToSpeech tts;
+    
+    private ChatterBotFactory chatterBotFactory;
+    
+    private ChatterBot bot;
+    private ChatterBotSession botSession;
 
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
 
@@ -215,14 +220,22 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         setContentView(R.layout.speech);
 
         tts = new TextToSpeech(this, this);
-
+        chatterBotFactory = new ChatterBotFactory();
+        try {
+			 bot = chatterBotFactory.create(ChatterBotType.CLEVERBOT);
+			 botSession = bot.createSession();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 stopTTS();
-                EasyTracker.getTracker().sendEvent("ui-action", "button_press", "speak_button", longitem);
+                //EasyTracker.getTracker().sendEvent("ui-action", "button_press", "speak_button", longitem);
                 Intent intent = new Intent(
                         RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
@@ -267,7 +280,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     protected void onStart() {
         super.onStart();
 
-        EasyTracker.getInstance().activityStart(this);//start Google Analytics API
+        ////EasyTracker.getInstance().activityStart(this);//start Google Analytics API
     }
 
 
@@ -288,8 +301,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      */
     private void matchTaskWithSpeech(String speechText) {
         //report data to google analytics
-    	EasyTracker.getTracker().sendEvent("internal", "general", "speech_to_text_recognition_successful", longitem); //Google Analytics event
-    	EasyTracker.getTracker().sendEvent("conversation", "user_input", speechText, longitem); //Google Analytics event
+    	//EasyTracker.getTracker().sendEvent("internal", "general", "speech_to_text_recognition_successful", longitem); //Google Analytics event
+    	//EasyTracker.getTracker().sendEvent("conversation", "user_input", speechText, longitem); //Google Analytics event
     	actualPrompt = speechText;
     	
     	showToast(speechText);
@@ -318,7 +331,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
         	showToast("Thinking...");
-            new DownloadWebpageTask().execute(recognitionURL);
+            new DownloadWebpageTask().execute(speechText);
+        	
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
         }
@@ -549,7 +563,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      */
     private void logUserData(String matchedPrompt)
     {
-    	EasyTracker.getTracker().sendEvent("conversation", "user_statement", matchedPrompt+"_"+actualPrompt, longitem); //Google Analytics event
+    	//EasyTracker.getTracker().sendEvent("conversation", "user_statement", matchedPrompt+"_"+actualPrompt, longitem); //Google Analytics event
     }
 
     /**
@@ -611,7 +625,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     @Override
     public void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this); // Add this method.
+        //EasyTracker.getInstance().activityStop(this); // Add this method.
     }
 
     @Override
@@ -654,30 +668,32 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         @Override
         protected String doInBackground(String... urls) {
 
-            // params comes from the execute() call: params[0] is the url.
             try {
-                return downloadUrl(urls[0]);
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
+				return botSession.think(urls[0]);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				return "Unable to retrieve web page. URL may be invalid.";
+			}
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            try {
+        	startTTS(result);
+            /*
+        	try {
                 parseXML(result);
-                EasyTracker.getTracker().sendEvent("internal", "general", "sentencerecognition_api_connection_successful", longitem);
+                //EasyTracker.getTracker().sendEvent("internal", "general", "sentencerecognition_api_connection_successful", longitem);
                 generateOutput();
             } catch (XmlPullParserException e) {
-            	EasyTracker.getTracker().sendEvent("error", "general", "sentencerecognition_api_url_error_XML_Parser_Exception", longitem);
+            	//EasyTracker.getTracker().sendEvent("error", "general", "sentencerecognition_api_url_error_XML_Parser_Exception", longitem);
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-            	EasyTracker.getTracker().sendEvent("error", "general", "sentencerecognition_api_url_error_IOException", longitem);
+            	//EasyTracker.getTracker().sendEvent("error", "general", "sentencerecognition_api_url_error_IOException", longitem);
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
