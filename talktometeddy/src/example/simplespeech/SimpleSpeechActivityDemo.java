@@ -194,7 +194,13 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
                 }
 
             }
-            eventType = xpp.next();
+
+            try{
+            	eventType = xpp.next();
+            }
+            catch (XmlPullParserException e){
+            	Log.e("TTS", "Application Error Occured");              
+            }
         }
     }
 
