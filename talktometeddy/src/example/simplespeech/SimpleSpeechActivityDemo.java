@@ -87,7 +87,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     
     private String task6Q_encoded = "Hi+Talking+Teddy";
     private String task6Q_decoded = "Hi Talking Teddy";
-    private String task6A1 = "Hey Kido! Would you like to hear a joke or a song?";
+    private String task6A1 = "Hey Kiddoe! Would you like to hear a joke or a song?";
     private String task6A2 = "Hey there! What would you like to learn today?";
     private String task6A3 = "Hello! I can make animal sounds.";
 
@@ -317,6 +317,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
+        	showToast("Thinking...");
             new DownloadWebpageTask().execute(recognitionURL);
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
@@ -396,7 +397,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.fallback2);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.fallback3);
             }
             logUserData("(unrecognized)");
@@ -425,7 +426,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.task3A2);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.task3A3);
             }
             logUserData(this.task3Q_decoded);
@@ -487,7 +488,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.task8B1);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.task8C1);
             }
             logUserData(this.task8Q_decoded);
@@ -527,7 +528,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.task16B1);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.task16C1);
             }
             logUserData(this.task16Q_decoded);
