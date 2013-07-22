@@ -50,6 +50,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private TextToSpeech tts;
 
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
+    
+    private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
 
     // strings for Teddy
     private String greeting1 = "Hey Kiddoe! Press my belly and talk to me.";
@@ -277,7 +279,12 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      * Stops any Text to Speech in progress.
      */
     private void stopTTS() {
-        tts.stop();
+    	tts.stop();
+    	if (downloadWebpageTask != null && 
+    			(downloadWebpageTask.getStatus() == AsyncTask.Status.PENDING || 
+    			downloadWebpageTask.getStatus() == AsyncTask.Status.RUNNING )) {
+    		downloadWebpageTask.cancel(true);
+    	}
     }
 
     /**
@@ -318,6 +325,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
         	showToast("Thinking...");
+        	downloadWebpageTask = new DownloadWebpageTask();
             new DownloadWebpageTask().execute(recognitionURL);
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
