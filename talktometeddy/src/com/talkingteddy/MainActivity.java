@@ -1,5 +1,6 @@
-package example.simplespeech;
+package com.talkingteddy;
 
+import com.talkingteddy.R;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;

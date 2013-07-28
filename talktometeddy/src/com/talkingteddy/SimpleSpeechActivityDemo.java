@@ -1,4 +1,4 @@
-package example.simplespeech;
+package com.talkingteddy;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
+
+import com.talkingteddy.R;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -109,7 +112,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
     private String task10Q_encoded = "how+old+are+you";
     private String task10Q_decoded = "how old are you";
-    private String task10A = "I'm just couple years older than you!";
+    private String task10A = "I'm just a couple years older than you!";
 
     private String task11Q_encoded = "who+is+your+best+friend";
     private String task11Q_decoded = "who is  your best friend";
