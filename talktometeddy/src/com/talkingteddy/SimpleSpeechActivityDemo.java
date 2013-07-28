@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.VideoView;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import com.talkingteddy.R;
@@ -226,18 +227,20 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
             @Override
             public void onClick(View v) {
-                stopTTS();
-                EasyTracker.getTracker().sendEvent("ui-action", "button_press", "speak_button", longitem);
-                Intent intent = new Intent(
-                        RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-
-                try {
-                    startActivityForResult(intent, RESULT_SPEECH);
-                } catch (ActivityNotFoundException a) {
-                    showToast("Oops! Your device doesn't support Speech to Text");
-                }
+//                stopTTS();
+//                EasyTracker.getTracker().sendEvent("ui-action", "button_press", "speak_button", longitem);
+//                Intent intent = new Intent(
+//                        RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+//
+//                try {
+//                    startActivityForResult(intent, RESULT_SPEECH);
+//                } catch (ActivityNotFoundException a) {
+//                    showToast("Oops! Your device doesn't support Speech to Text");
+//                }
+                Intent videoIntent = new Intent(SimpleSpeechActivityDemo.this, SplashVideoActivity.class);
+                startActivity(videoIntent);
             }
         });
     }

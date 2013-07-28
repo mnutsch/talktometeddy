@@ -39,5 +39,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".SplashVideoActivity"
+                  android:label="@string/video_player_name"
+                  android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale"
+                  android:screenOrientation="portrait"
+
+                >
+
+        </activity>
     </application>
 </manifest>
