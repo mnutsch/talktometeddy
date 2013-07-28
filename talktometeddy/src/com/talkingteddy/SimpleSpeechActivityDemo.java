@@ -1,4 +1,4 @@
-package example.simplespeech;
+package com.talkingteddy;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
+
+import com.talkingteddy.R;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -50,6 +53,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private TextToSpeech tts;
 
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
+    
+    private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
 
     // strings for Teddy
     private String greeting1 = "Hey Kiddoe! Press my belly and talk to me.";
@@ -87,7 +92,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     
     private String task6Q_encoded = "Hi+Talking+Teddy";
     private String task6Q_decoded = "Hi Talking Teddy";
-    private String task6A1 = "Hey Kido! Would you like to hear a joke or a song?";
+    private String task6A1 = "Hey Kiddoe! Would you like to hear a joke or a song?";
     private String task6A2 = "Hey there! What would you like to learn today?";
     private String task6A3 = "Hello! I can make animal sounds.";
 
@@ -107,7 +112,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
     private String task10Q_encoded = "how+old+are+you";
     private String task10Q_decoded = "how old are you";
-    private String task10A = "I'm just couple years older than you!";
+    private String task10A = "I'm just a couple years older than you!";
 
     private String task11Q_encoded = "who+is+your+best+friend";
     private String task11Q_decoded = "who is  your best friend";
@@ -194,7 +199,12 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
                 }
 
             }
-            eventType = xpp.next();            
+            try{
+            	eventType = xpp.next();
+            }
+            catch (XmlPullParserException e){
+            	Log.e("TTS", "Application Error Occured");              
+            }
         }
     }
 
@@ -208,7 +218,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
         setContentView(R.layout.speech);
 
-        tts = new TextToSpeech(this, this);    
+        tts = new TextToSpeech(this, this);
         // Making Teddy sound like a kid :) 
         tts.setPitch(1.5f);
         tts.setSpeechRate(0.9f);
@@ -274,7 +284,12 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      * Stops any Text to Speech in progress.
      */
     private void stopTTS() {
-        tts.stop();
+    	tts.stop();
+    	if (downloadWebpageTask != null && 
+    			(downloadWebpageTask.getStatus() == AsyncTask.Status.PENDING || 
+    			downloadWebpageTask.getStatus() == AsyncTask.Status.RUNNING )) {
+    		downloadWebpageTask.cancel(true);
+    	}
     }
 
     /**
@@ -314,6 +329,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
+        	showToast("Thinking...");
+        	downloadWebpageTask = new DownloadWebpageTask();
             new DownloadWebpageTask().execute(recognitionURL);
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
@@ -393,7 +410,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.fallback2);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.fallback3);
             }
             logUserData("(unrecognized)");
@@ -422,7 +439,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.task3A2);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.task3A3);
             }
             logUserData(this.task3Q_decoded);
@@ -484,7 +501,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.task8B1);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.task8C1);
             }
             logUserData(this.task8Q_decoded);
@@ -524,7 +541,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             } else if (i1 == 2) {
                 this.startTTS(this.task16B1);
             }
-            if (i1 == 3) {
+            else if (i1 == 3) {
                 this.startTTS(this.task16C1);
             }
             logUserData(this.task16Q_decoded);
