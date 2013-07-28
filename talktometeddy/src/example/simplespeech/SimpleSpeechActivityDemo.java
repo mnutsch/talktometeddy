@@ -194,7 +194,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
                 }
 
             }
-            eventType = xpp.next();
+            eventType = xpp.next();            
         }
     }
 
@@ -208,8 +208,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
         setContentView(R.layout.speech);
 
-        tts = new TextToSpeech(this, this);
-
+        tts = new TextToSpeech(this, this);    
+        // Making Teddy sound like a kid :) 
+        tts.setPitch(1.5f);
+        tts.setSpeechRate(0.9f);
+        
         heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
 
