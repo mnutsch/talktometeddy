@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.Random;
 
 
-public class SimpleSpeechActivityDemo extends Activity implements OnInitListener {
+public class TalkingTeddyActivity extends Activity implements OnInitListener {
 
     // Connection timeouts for HTTP connections
     public static final int CONNECTION_READ_TIMEOUT_MILLIS = 10000;
@@ -54,7 +54,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
     
-    private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
+    private TalkingTeddyActivity.DownloadWebpageTask downloadWebpageTask;
 
     // strings for Teddy
     private String greeting1 = "Hey Kiddoe! Press my belly and talk to me.";
