@@ -21,6 +21,7 @@ import com.talkingteddy.R;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class TalkingTeddyActivity extends Activity implements OnInitListener {
@@ -38,6 +39,8 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 	private DownloadAndProcessXML downloadAndProcessXML;
 
 	private Context context;
+	
+	private TaskDiscriminator taskDiscriminator;
 
 	// strings for Teddy
 	private String greeting1 = "Hey Kiddoe! Press my belly and talk to me.";
@@ -142,11 +145,12 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
+		/*
 		if (BuildConfig.DEBUG) {
 			GoogleAnalytics googleAnalytics = GoogleAnalytics
 					.getInstance(getApplicationContext());
 			googleAnalytics.setAppOptOut(true);
-		}
+		}*/
 
 		super.onCreate(savedInstanceState);
 
@@ -154,6 +158,9 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 
 		tts = new TextToSpeech(this, this);
 		context = this;
+		taskDiscriminator = new TaskDiscriminator(context);
+		
+		EasyTracker.getInstance().setContext(context);
 
 		heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
 		heartSpeakButton.setOnClickListener(new View.OnClickListener() {
@@ -220,42 +227,9 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 		Helper.showToast(speechText, context);
 		// And then perform a search on a website using the text.
 		String query = URLEncoder.encode(speechText);
-		String recognitionURL = "http://www.sentencerecognition.com/sentencerecognition070313.php?input="
-				+ query
-				+ "&key="
-				+ apikey
-				+ "&sentence1="
-				+ this.task1Q_encoded
-				+ "&sentence2="
-				+ this.task2Q_encoded
-				+ "&sentence3="
-				+ this.task3Q_encoded
-				+ "&sentence4="
-				+ this.task4Q_encoded
-				+ "&sentence5="
-				+ this.task5Q_encoded
-				+ "&sentence6="
-				+ this.task6Q_encoded
-				+ "&sentence7="
-				+ this.task7Q_encoded
-				+ "&sentence8="
-				+ this.task8Q_encoded
-				+ "&sentence9="
-				+ this.task9Q_encoded
-				+ "&sentence10="
-				+ this.task10Q_encoded
-				+ "&sentence11="
-				+ this.task11Q_encoded
-				+ "&sentence12="
-				+ this.task12Q_encoded
-				+ "&sentence13="
-				+ this.task13Q_encoded
-				+ "&sentence14="
-				+ this.task14Q_encoded
-				+ "&sentence15="
-				+ this.task15Q_encoded
-				+ "&sentence16="
-				+ this.task16Q_encoded + "&sentence17=" + this.task17Q_encoded;
+		List<Task> tasks = taskDiscriminator.enumeratedTasks();
+		
+		String recognitionURL = Helper.getRecognitionURL(tasks, query);
 
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

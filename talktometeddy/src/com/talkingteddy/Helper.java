@@ -1,5 +1,6 @@
 package com.talkingteddy;
 
+import java.util.List;
 import java.util.Random;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -90,6 +91,23 @@ public class Helper {
 	public static void logUserData(String matchedPrompt, ResponseDigest respDigest) {
 		 EasyTracker.getTracker().sendEvent("conversation", "user_statement",
 				 respDigest.getMatchingPrompt()+"_"+respDigest.getActualPrompt(), longitem); //Google Analytics event
+	}
+	
+	public static String getRecognitionURL(List<Task> tasks, String query){
+		String urlFormat = "http://www.sentencerecognition.com/sentencerecognition070313.php?input=%s&key=962b2d2b8e72dc6771bca613d49b46fb%s}";
+		
+		int index = 1;
+		
+		String taskStringFormat = "&sentence%s=%s";
+		String encodedTasksString = "";
+		
+		for( Task task : tasks)
+		{
+			encodedTasksString = encodedTasksString + String.format(taskStringFormat, index++, task.getEncodedQuestion());
+		}
+		
+		return String.format(urlFormat, query, encodedTasksString);
+		
 	}
 	
 }

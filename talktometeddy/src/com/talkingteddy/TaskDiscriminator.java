@@ -11,14 +11,14 @@ import java.util.*;
  */
 public class TaskDiscriminator {
     private static HashMap<String, Task> taskStorage = new HashMap<String, Task>();
-    private static Context context;
+    private Context context;
 
     public TaskDiscriminator(Context context) {
         this.context = context;
         loadTasksFromFile();
     }
 
-    public static Task getTask(ResponseDigest responseDigest) {
+    public Task getTask(ResponseDigest responseDigest) {
         Task result = taskStorage.get(responseDigest.getMatchingPrompt());
 
         //TODO: use constant from the helper class
@@ -42,11 +42,10 @@ public class TaskDiscriminator {
 
     private void loadTasksFromFile() {
         Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.tasks));
-        scanner.useDelimiter("#");
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             Scanner token = new Scanner(line);
-
+            token.useDelimiter("#");
             String question = token.next();
             List<String> answers = new LinkedList<String>();
 
