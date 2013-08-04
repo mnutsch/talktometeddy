@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -20,18 +19,13 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 
 import com.talkingteddy.R;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Random;
 
 public class TalkingTeddyActivity extends Activity implements OnInitListener {
 
 	protected static final int RESULT_SPEECH = 1;
-	private static final int TOAST_DURATION = Toast.LENGTH_SHORT;
 
 	long longitem = 0; // used by Google Analytics
 
@@ -275,28 +269,6 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 					context);
 		}
 
-	}
-
-	/**
-	 * Returns a string converted from a stream.
-	 * 
-	 * @param is
-	 *            the input stream used to convert to a string
-	 * @return string converted from the input stream
-	 * @throws IOException
-	 */
-	public String convertStreamToString(InputStream is) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
-		String line;
-
-		while ((line = reader.readLine()) != null) {
-			sb.append(line);
-		}
-
-		is.close();
-
-		return sb.toString();
 	}
 
 	@Override
