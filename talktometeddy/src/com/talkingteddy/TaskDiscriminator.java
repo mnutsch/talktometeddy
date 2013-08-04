@@ -15,7 +15,7 @@ public class TaskDiscriminator {
 
     public TaskDiscriminator(Context context) {
         this.context = context;
-        loadTasksFromFile("tasks");
+        loadTasksFromFile();
     }
 
     public static Task getTask(ResponseDigest responseDigest) {
@@ -33,14 +33,14 @@ public class TaskDiscriminator {
         taskStorage.put(prompt, task);
     }
 
-    public List<String> enumeratedURL() {
-        List<String> result = new ArrayList<String>();
-        result.addAll(taskStorage.keySet());
+    public List<Task> enumeratedTasks() {
+        List<Task> result = new ArrayList<Task>();
+        result.addAll(taskStorage.values());
         return result;
     }
 
 
-    private void loadTasksFromFile(String tasks) {
+    private void loadTasksFromFile() {
         Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.tasks));
         scanner.useDelimiter("#");
         while (scanner.hasNextLine()) {
