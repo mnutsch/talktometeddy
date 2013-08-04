@@ -1,0 +1,18 @@
+!!!FALLBACK!!!#I didn't understand you! Please say that again.#Will you please say that again?#I didn't understand you! What did you say?
+prime colors#The prime colors are red, blue and yellow.#Combining the colors yellow and blue makes green.#Mixing the colors red and blue makes purple.
+teach count numbers#Let's count to ten. One, two, three, four, five, six, seven, eight, nine, ten.
+sounds do animals make#Let's talk about the sounds that animals make. The cow says Moo. The pig says Oink Oink. The cat says Meow. The dog says Woof Woof. The rooster says cockle doodle doo.#Let's talk about the sounds that animals make. The cat says Meow. The dog says Woof Woof. The cow says Moo. The pig says Oink Oink. The rooster says cockle doodle doo.#Let's talk about the sounds that animals make. The rooster says cockle doodle doo. The cat says Meow. The dog says Woof Woof. The cow says Moo. The pig says Oink Oink.
+sing me a song#Let's sing a song. Twinkle twinkle little star. How I wonder what you are.#Let's sing a song. London bridge is falling down, falling down, falling downLet's sing a song. You are my sunshine, my only sunshine. You make me happy when skies are gray.#Let's sing a song. Humpty Dumpty sat on a wall, Humpty Dumpty had a great fall. All the king's horses and all the king's men. Couldn't put Humpty together again
+teach me alphabet#Let's learn the alphabet. A for apple, B for ball, C for cat.#Let's learn the alphabet. D for dog, E for elephant, F for frog.#Let's learn the alphabet. G for goat, H is for happy, I is for iguana.
+Hi Talking Teddy#Hey Kiddoe! Would you like to hear a joke or a song?#Hey there! What would you like to learn today?#Hello! I can make animal sounds.
+what do you know#Teddy knows a little about colors, numbers, animal sounds, the alphabet, funny jokes and songs.
+tell me a funny joke#Why do bees have sticky hair? Because they use honeycombs!#Why is six afraid of seven? Because seven eight nine!#What do you call a pig that knows karate? Pork chops!
+what is your name#My name is Talking Teddy!
+how old are you#I'm just a couple years older than you!
+who is your best friend#You are my best friend!
+favorite color#I like a little bit of everything, so rainbow is my favorite color.
+can we be friends#Of course. I'm already your friend!
+i love you teddy# I love you too. You are my best friend!
+pretty good awesome#Thanks! I'm working towards that.#I certainly hope you think so.#You're not so bad yourself.
+stupid dumb#Hey, be nice. I've feelings you know!
+
