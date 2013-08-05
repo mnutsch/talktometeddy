@@ -8,10 +8,12 @@ Hi Talking Teddy#Hey Kiddoe! Would you like to hear a joke or a song?#Hey there!
 what do you know#Teddy knows a little about colors, numbers, animal sounds, the alphabet, funny jokes and songs.
 tell me a funny joke#Why do bees have sticky hair? Because they use honeycombs!#Why is six afraid of seven? Because seven eight nine!#What do you call a pig that knows karate? Pork chops!
 what is your name#My name is Talking Teddy!
-how old are you#I'm just a couple years older than you!
+old#I'm just a couple years older than you!
 who is your best friend#You are my best friend!
 favorite color#I like a little bit of everything, so rainbow is my favorite color.
 can we be friends#Of course. I'm already your friend!
 i love you teddy# I love you too. You are my best friend!
 pretty good awesome#Thanks! I'm working towards that.#I certainly hope you think so.#You're not so bad yourself.
 stupid dumb#Hey, be nice. I've feelings you know!
+how are you#I'm doing well. Thanks for asking!
+live#I'm from Seattle, Washington.
