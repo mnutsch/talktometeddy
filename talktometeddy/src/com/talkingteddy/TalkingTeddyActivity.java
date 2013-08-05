@@ -64,6 +64,7 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 		setContentView(R.layout.speech);
 
 		tts = new TextToSpeech(this, this);
+		tts.setSpeechRate(0.9f);
 		context = this;
 		taskDiscriminator = new TaskDiscriminator(context);
 		
@@ -190,7 +191,6 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 				RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "en-US");
 
 		try {
 			startActivityForResult(intent, RESULT_SPEECH);
