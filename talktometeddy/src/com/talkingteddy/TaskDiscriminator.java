@@ -1,9 +1,6 @@
 package com.talkingteddy;
 
 import android.content.Context;
-
-import java.io.File;
-import java.io.InputStream;
 import java.util.*;
 
 /**
