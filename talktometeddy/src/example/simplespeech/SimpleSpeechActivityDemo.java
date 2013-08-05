@@ -1,5 +1,4 @@
 package example.simplespeech;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -50,6 +50,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private TextToSpeech tts;
 
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
+    
+    private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
 
     // strings for Teddy
     private String greeting1 = "Hey Kiddoe! Press my belly and talk to me.";
@@ -107,7 +109,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
 
     private String task10Q_encoded = "how+old+are+you";
     private String task10Q_decoded = "how old are you";
-    private String task10A = "I'm just couple years older than you!";
+    private String task10A = "I'm just a couple years older than you!";
 
     private String task11Q_encoded = "who+is+your+best+friend";
     private String task11Q_decoded = "who is  your best friend";
@@ -142,7 +144,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String fallback1 = "I didn't understand you! Please say that again.";
     private String fallback2 = "Will you please say that again?";
     private String fallback3 = "I didn't understand you! What did you say?";
-    private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
 
     //parse XML
     public static void parseXML(String xmlInput)
@@ -195,7 +196,6 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
                 }
 
             }
-
             try{
             	eventType = xpp.next();
             }
@@ -216,7 +216,10 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         setContentView(R.layout.speech);
 
         tts = new TextToSpeech(this, this);
-
+        // Making Teddy sound like a kid :) 
+        //tts.setPitch(1.5f);
+        tts.setSpeechRate(0.9f);
+        
         heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
 
@@ -278,11 +281,12 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      * Stops any Text to Speech in progress.
      */
     private void stopTTS() {
-        if (downloadWebpageTask != null) {
-            downloadWebpageTask.cancel(true);
-            showToast("Thinking Interrupted.");
-        }
-        tts.stop();
+    	tts.stop();
+    	if (downloadWebpageTask != null && 
+    			(downloadWebpageTask.getStatus() == AsyncTask.Status.PENDING || 
+    			downloadWebpageTask.getStatus() == AsyncTask.Status.RUNNING )) {
+    		downloadWebpageTask.cancel(true);
+    	}
     }
 
     /**
@@ -323,8 +327,8 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
         	showToast("Thinking...");
-            downloadWebpageTask = new DownloadWebpageTask();
-            downloadWebpageTask.execute(recognitionURL);
+        	downloadWebpageTask = new DownloadWebpageTask();
+            new DownloadWebpageTask().execute(recognitionURL);
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
         }
@@ -655,6 +659,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      * displayed in the UI by the AsyncTask's onPostExecute method.
      */
     private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+
 
         @Override
         protected String doInBackground(String... urls) {
