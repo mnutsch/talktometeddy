@@ -74,21 +74,7 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 
 			@Override
 			public void onClick(View v) {
-				Helper.stopTTS(tts, downloadAndProcessXML);
-				EasyTracker.getTracker().sendEvent("ui-action", "button_press",
-						"speak_button", longitem);
-				Intent intent = new Intent(
-						RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-
-				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-
-				try {
-					startActivityForResult(intent, RESULT_SPEECH);
-				} catch (ActivityNotFoundException a) {
-					Helper.showToast(
-							"Oops! Your device doesn't support Speech to Text",
-							context);
-				}
+				PerformRecongnition();
 			}
 		});
 	}
@@ -193,5 +179,25 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 					context);
 		}
 
+	}
+	
+	private void PerformRecongnition()
+	{
+		Helper.stopTTS(tts, downloadAndProcessXML);
+		EasyTracker.getTracker().sendEvent("ui-action", "button_press",
+				"speak_button", longitem);
+		Intent intent = new Intent(
+				RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "en-US");
+
+		try {
+			startActivityForResult(intent, RESULT_SPEECH);
+		} catch (ActivityNotFoundException a) {
+			Helper.showToast(
+					"Oops! Your device doesn't support Speech to Text",
+					context);
+		}
 	}
 }
