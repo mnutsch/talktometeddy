@@ -17,8 +17,6 @@ import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 
-import com.talkingteddy.R;
-
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,8 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 	public static void GenerateOutput(ResponseDigest respDigest) {
 		System.out.println("in generateOutput");
 		Task task = taskDiscriminator.getTask(respDigest);
-		Helper.startTTS(task.getRandomSpeechAnswer(), tts, context);
+		//Helper.startTTS(task.getRandomAnswer(), tts, context);
+        Helper.dispatchAndStart(context, tts, task.getRandomAnswer());
 	}
 
 	/**

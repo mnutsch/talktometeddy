@@ -40,19 +40,22 @@ public class TaskDiscriminator {
     private void loadTasksFromFile() {
         Scanner scanner = new Scanner(context.getResources().openRawResource(R.raw.tasks));
         while (scanner.hasNextLine()) {
+
             String line = scanner.nextLine();
-            Scanner token = new Scanner(line);
-            token.useDelimiter("#");
-            String question = token.next();
-            List<String> answers = new LinkedList<String>();
+            if (line != "") {
+                Scanner token = new Scanner(line);
+                token.useDelimiter("#");
+                String question = token.next();
+                List<String> answers = new LinkedList<String>();
 
-            while (token.hasNext()) {
-                answers.add(0, token.next());
+                while (token.hasNext()) {
+                    answers.add(0, token.next());
+                }
+
+                String[] answersArray = answers.toArray(new String[answers.size()]);
+
+                taskStorage.put(question, new BasicTask(question, answersArray));
             }
-
-            String[] answersArray = answers.toArray(new String[answers.size()]);
-
-            taskStorage.put(question, new BasicTask(question, answersArray));
         }
 
     }

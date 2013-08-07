@@ -3,6 +3,7 @@ package com.talkingteddy;
 import java.util.List;
 import java.util.Random;
 
+import android.content.Intent;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import android.content.Context;
@@ -19,7 +20,17 @@ public class Helper {
 	private static String greeting3 = "Hello! Press my belly and talk to me.";
 	
 	private static long longitem = 0; // used by Google Analytics
-	
+
+    public static void dispatchAndStart(Context context, TextToSpeech tts, String answer) {
+        String[] parts = answer.split("\\s+");
+        if (parts[0].equals("<video>")) {
+            playVideo(context, parts[1]);
+        } else {
+            startTTS(answer, tts, context);
+        }
+    }
+
+
 	/**
 	 * Speaks the given text. If text is empty, speak "You haven't typed text".
 	 * 
@@ -70,6 +81,12 @@ public class Helper {
 			downloadAndProcessXML.cancel(true);
 		}
 	}
+
+    public static void playVideo(Context context, String videoName) {
+        Intent videoIntent = new Intent(context, SplashVideoActivity.class);
+        videoIntent.putExtra("VIDEO_NAME", videoName);
+        context.startActivity(videoIntent);
+    }
 	
 	/**
 	 * Shows a toast containing specified text.

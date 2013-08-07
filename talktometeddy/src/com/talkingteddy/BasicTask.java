@@ -30,7 +30,8 @@ public class BasicTask implements Task {
     }
 
     @Override
-    public String getRandomSpeechAnswer() {
+    @Deprecated
+    public String getRandomAnswer() {
         return answers[r.nextInt(answers.length)];
     }
 }

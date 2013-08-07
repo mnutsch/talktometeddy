@@ -23,7 +23,7 @@ public interface Task {
      *
      * @return speech answer in plain form, randomly from a number of candidates, if any.
      */
-    String getRandomSpeechAnswer();
+    String getRandomAnswer();
 
 
 }
