@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -218,6 +220,13 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.speech);
+        
+        if (BuildConfig.DEBUG) {
+			GoogleAnalytics googleAnalytics = GoogleAnalytics
+					.getInstance(getApplicationContext());
+			googleAnalytics.setAppOptOut(true);
+		}
+
 
         tts = new TextToSpeech(this, this);
         chatterBotFactory = new ChatterBotFactory();
