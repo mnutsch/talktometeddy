@@ -16,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
 
+import com.google.code.chatterbotapi.*;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -52,6 +54,13 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String apikey = "962b2d2b8e72dc6771bca613d49b46fb";
     
     private SimpleSpeechActivityDemo.DownloadWebpageTask downloadWebpageTask;
+    
+    private SimpleSpeechActivityDemo.PerformChatterBotAPITask chatterBotAPITask;
+    
+    private ChatterBotFactory chatterBotFactory;
+    
+    private ChatterBot bot;
+    private ChatterBotSession botSession;
 
     // strings for Teddy
     private String greeting1 = "Hey Kiddoe! Press my belly and talk to me.";
@@ -102,13 +111,18 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task8A1 = "Why do bees have sticky hair? Because they use honeycombs!";
     private String task8B1 = "Why is six afraid of seven? Because seven eight nine!";
     private String task8C1 = "What do you call a pig that knows karate? Pork chops!";
+    private String task8D1 = "What do you call an alligator in a Vest? An Investigator.";
+    private String task8E1 = "How do you shoot a killer bee? With a bee bee gun.";
+    private String task8F1 = "Why did the computer go to the doctor? Because it had a virus!";
+    private String task8G1 = "What is the best day to go to the beach? Sunday, of course!";
+    
 
     private String task9Q_encoded = "what+is+your+name";
     private String task9Q_decoded = "what is your name";
     private String task9A = "My name is Talking Teddy!";
 
-    private String task10Q_encoded = "how+old+are+you";
-    private String task10Q_decoded = "how old are you";
+    private String task10Q_encoded = "how+old";
+    private String task10Q_decoded = "how old";
     private String task10A = "I'm just a couple years older than you!";
 
     private String task11Q_encoded = "who+is+your+best+friend";
@@ -140,6 +154,10 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     private String task17Q_encoded = "stupid+dumb";
     private String task17Q_decoded = "stupid dumb";
     private String task17A = "Hey, be nice. I've feelings you know!";
+    
+    private String task18Q_encoded = "how+are+you+doing+day";
+    private String task18Q_decoded = "how are you doing day";
+    private String task18A = "I'm doing well, thanks for asking!";
 
     private String fallback1 = "I didn't understand you! Please say that again.";
     private String fallback2 = "Will you please say that again?";
@@ -218,7 +236,16 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
         tts = new TextToSpeech(this, this);
         // Making Teddy sound like a kid :) 
         //tts.setPitch(1.5f);
-        tts.setSpeechRate(0.9f);
+        tts.setSpeechRate(0.95f);
+        
+        chatterBotFactory = new ChatterBotFactory();
+        try {
+			 bot = chatterBotFactory.create(ChatterBotType.CLEVERBOT);
+			 botSession = bot.createSession();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
         heartSpeakButton.setOnClickListener(new View.OnClickListener() {
@@ -287,6 +314,12 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
     			downloadWebpageTask.getStatus() == AsyncTask.Status.RUNNING )) {
     		downloadWebpageTask.cancel(true);
     	}
+    	
+    	if (chatterBotAPITask != null && 
+    			(chatterBotAPITask.getStatus() == AsyncTask.Status.PENDING || 
+    					chatterBotAPITask.getStatus() == AsyncTask.Status.RUNNING )) {
+    		chatterBotAPITask.cancel(true);
+    	}
     }
 
     /**
@@ -321,14 +354,15 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
                 "&sentence14=" + this.task14Q_encoded +
                 "&sentence15=" + this.task15Q_encoded +
                 "&sentence16=" + this.task16Q_encoded +
-                "&sentence17=" + this.task17Q_encoded;
+                "&sentence17=" + this.task17Q_encoded +
+                "&sentence18=" + this.task18Q_encoded;;
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
         	showToast("Thinking...");
         	downloadWebpageTask = new DownloadWebpageTask();
-            new DownloadWebpageTask().execute(recognitionURL);
+        	downloadWebpageTask.execute(recognitionURL);
         } else {
             this.startTTS("Teddy needs internet connection to work properly.");
         }
@@ -397,20 +431,11 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
      */
     private void generateOutput() {
         double promptScore = Double.parseDouble(matchingPromptScore);
-        if (promptScore < 35) {
+        if (promptScore < 70) {
         	
-            Random r = new Random();
-            int i1 = r.nextInt(4 - 1) + 1;
-
-            if (i1 == 1) {
-                this.startTTS(this.fallback1);
-            } else if (i1 == 2) {
-                this.startTTS(this.fallback2);
-            }
-            else if (i1 == 3) {
-                this.startTTS(this.fallback3);
-            }
-            logUserData("(unrecognized)");
+        	chatterBotAPITask = new PerformChatterBotAPITask();
+        	chatterBotAPITask.execute(actualPrompt);
+            
         } else if (matchingPrompt.compareTo(this.task1Q_decoded) == 0) {
             Random r = new Random();
             int i1 = r.nextInt(4 - 1) + 1;
@@ -491,7 +516,7 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             logUserData(this.task7Q_decoded);
         } else if (matchingPrompt.compareTo(this.task8Q_decoded) == 0) {
             Random r = new Random();
-            int i1 = r.nextInt(4 - 1) + 1;
+            int i1 = r.nextInt(8 - 1) + 1;
 
             if (i1 == 1) {
                 this.startTTS(this.task8A1);
@@ -500,6 +525,18 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             }
             else if (i1 == 3) {
                 this.startTTS(this.task8C1);
+            }
+            else if (i1 == 4) {
+                this.startTTS(this.task8D1);
+            }
+            else if (i1 == 5) {
+                this.startTTS(this.task8E1);
+            }
+            else if (i1 == 6) {
+                this.startTTS(this.task8F1);
+            }
+            else if (i1 == 7) {
+                this.startTTS(this.task8G1);
             }
             logUserData(this.task8Q_decoded);
         } else if (matchingPrompt.compareTo(this.task9Q_decoded) == 0) {
@@ -547,7 +584,13 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             this.startTTS(this.task17A);
             logUserData(this.task17Q_decoded);
 
-        } else {
+        } 
+        else if (matchingPrompt.compareTo(this.task18Q_decoded) == 0) {
+            this.startTTS(this.task18A);
+            logUserData(this.task18Q_decoded);
+
+        } 
+        else {
             this.startTTS(this.task7A);
             logUserData("what do you know (default)");
         }
@@ -690,6 +733,55 @@ public class SimpleSpeechActivityDemo extends Activity implements OnInitListener
             }
         }
     }
+    
+    
+    /**
+     * An asynchronous task that handles requests to the speech-matching API.
+     * <p/>
+     * Uses AsyncTask to create a task away from the main UI thread. This task takes a
+     * URL string and uses it to create an HttpUrlConnection. Once the connection
+     * has been established, the AsyncTask downloads the contents of the webpage as
+     * an InputStream. Finally, the InputStream is converted into a string, which is
+     * displayed in the UI by the AsyncTask's onPostExecute method.
+     */
+    private class PerformChatterBotAPITask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... urls) {
+
+            try {
+				return botSession.think(urls[0]);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				return "Unable to retrieve web page. URL may be invalid.";
+			}
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+        	
+        	if (result.length() == 0)
+        	{
+                Random r = new Random();
+                int i1 = r.nextInt(4 - 1) + 1;
+
+                if (i1 == 1) {
+                    startTTS(fallback1);
+                } else if (i1 == 2) {
+                    startTTS(fallback2);
+                }
+                else if (i1 == 3) {
+                    startTTS(fallback3);
+                }
+                logUserData("(unrecognized)");
+        	}
+        	else
+        	{
+        		logUserData("(unrecognized_"+result+")");
+        		startTTS(result);
+        	}
+        }
+    }
 
 }
