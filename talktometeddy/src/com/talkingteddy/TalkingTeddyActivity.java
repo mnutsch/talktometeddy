@@ -21,7 +21,6 @@ import com.talkingteddy.R;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class TalkingTeddyActivity extends Activity implements OnInitListener {
@@ -33,17 +32,13 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 	private static TextToSpeech tts;
 
 	private static Context context;
-	
-	private static TaskDiscriminator taskDiscriminator;
 
 	private static DownloadAndProcessXML downloadAndProcessXML;
 
 	private static final int RESULT_SPEECH = 1;
 	
-	public static void GenerateOutput(ResponseDigest respDigest) {
-		System.out.println("in generateOutput");
-		Task task = taskDiscriminator.getTask(respDigest);
-		Helper.startTTS(task.getRandomSpeechAnswer(), tts, context);
+	public static void GenerateOutput(String returnedText) {
+		Helper.startTTS(returnedText, tts, context);
 	}
 
 	/**
@@ -64,9 +59,8 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 		setContentView(R.layout.speech);
 
 		tts = new TextToSpeech(this, this);
-		tts.setSpeechRate(0.9f);
+		tts.setSpeechRate(0.95f);
 		context = this;
-		taskDiscriminator = new TaskDiscriminator(context);
 		
 		EasyTracker.getInstance().setContext(context);
 
@@ -116,7 +110,8 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 						Toast.LENGTH_LONG).show();
 				Log.e("TTS", "Language is not supported");
 			}
-			Helper.greet(tts, context);
+			
+			ExecuteServerCall("DummyText");
 
 		} else {
 			Log.e("TTS", "Initilization Failed");
@@ -164,14 +159,18 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 		Helper.showToast(speechText, context);
 		// And then perform a search on a website using the text.
 		String query = URLEncoder.encode(speechText);
-		List<Task> tasks = taskDiscriminator.enumeratedTasks();
-		
-		String recognitionURL = Helper.getRecognitionURL(tasks, query);
+		ExecuteServerCall(query);
 
+	}
+	
+	private void ExecuteServerCall(String speechText)
+	{
+		String recognitionURL = Helper.getRecognitionURL(speechText);
+		Log.v("Url for API2",recognitionURL);
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {
-			Helper.showToast("Thnking...", context);
+			Helper.showToast("Thinking...", context);
 			downloadAndProcessXML = new DownloadAndProcessXML();
 			downloadAndProcessXML.execute(recognitionURL, speechText);
 		} else {
@@ -179,7 +178,6 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 					"Teddy needs internet connection to work properly.", tts,
 					context);
 		}
-
 	}
 	
 	private void PerformRecongnition()

@@ -1,6 +1,5 @@
 package com.talkingteddy;
 
-import java.util.List;
 import java.util.Random;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -19,6 +18,8 @@ public class Helper {
 	private static String greeting3 = "Hello! Press my belly and talk to me.";
 	
 	private static long longitem = 0; // used by Google Analytics
+	
+	public static String previousScenario = "998";
 	
 	/**
 	 * Speaks the given text. If text is empty, speak "You haven't typed text".
@@ -93,20 +94,9 @@ public class Helper {
 				 respDigest.getMatchingPrompt()+"_"+respDigest.getActualPrompt(), longitem); //Google Analytics event
 	}
 	
-	public static String getRecognitionURL(List<Task> tasks, String query){
-		String urlFormat = "http://www.sentencerecognition.com/sentencerecognition070313.php?input=%s&key=962b2d2b8e72dc6771bca613d49b46fb%s}";
-		
-		int index = 1;
-		
-		String taskStringFormat = "&sentence%s=%s";
-		String encodedTasksString = "";
-		
-		for( Task task : tasks)
-		{
-			encodedTasksString = encodedTasksString + String.format(taskStringFormat, index++, task.getEncodedQuestion());
-		}
-		
-		return String.format(urlFormat, query, encodedTasksString);
+	public static String getRecognitionURL(String query){
+		String urlFormat = "http://www.sentencerecognition.com/sentreco2.php?key=ae2b1fca515949e5d54fb22b8ed95575&bot_id=2&scenario_id=%s&input=%s";
+		return String.format(urlFormat, previousScenario, query);
 		
 	}
 	

@@ -52,10 +52,10 @@ public class DownloadAndProcessXML extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		try {
-			parseXML(result);
+			String returnedText = parseXML(result);
 			 EasyTracker.getTracker().sendEvent("internal", "general",
 			 "sentencerecognition_api_connection_successful", longitem);
-			TalkingTeddyActivity.GenerateOutput(this.responseDigest);
+			TalkingTeddyActivity.GenerateOutput(returnedText);
 		} catch (XmlPullParserException e) {
 			 EasyTracker.getTracker().sendEvent("error", "general",
 			 "sentencerecognition_api_url_error_XML_Parser_Exception",
@@ -130,12 +130,14 @@ public class DownloadAndProcessXML extends AsyncTask<String, Void, String> {
 	}
 
 	// parse XML
-	private void parseXML(String xmlInput) throws XmlPullParserException,
+	private String parseXML(String xmlInput) throws XmlPullParserException,
 			IOException {
 		int lastNameWasMatchingPrompt = 0;
 		int lastNameWasMatchingPromptScore = 0;
 
 		String name;
+		
+		String processedText = "";
 
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 
@@ -155,12 +157,12 @@ public class DownloadAndProcessXML extends AsyncTask<String, Void, String> {
 				// System.out.println("Start tag "+xpp.getName());
 				// matchingPrompt = matchingPrompt + xpp.getName() + "***\n";
 				name = xpp.getName();
-				if (name.equalsIgnoreCase("matching_prompt")) {
+				if (name.equalsIgnoreCase("say")) {
 					lastNameWasMatchingPrompt = 1;
 					// matchingPrompt = matchingPrompt +
 					// "Matching Prompt Found!\n";
 				}
-				if (name.equalsIgnoreCase("matching_prompt_score")) {
+				if (name.equalsIgnoreCase("new_scenario")) {
 					lastNameWasMatchingPromptScore = 1;
 					// matchingPrompt = matchingPrompt +
 					// "Matching Prompt Score Found!\n";
@@ -172,12 +174,11 @@ public class DownloadAndProcessXML extends AsyncTask<String, Void, String> {
 				// matchingPrompt = matchingPrompt + xpp.getName() + ": " +
 				// xpp.getText() + "\n";
 				if (lastNameWasMatchingPrompt == 1) {
-					this.responseDigest.setMatchingPrompt(xpp.getText());
+					processedText = xpp.getText();
 					lastNameWasMatchingPrompt = 0;
 				}
 				if (lastNameWasMatchingPromptScore == 1) {
-					this.responseDigest.setMatchingPromptScore(Double
-							.parseDouble(xpp.getText()));
+					Helper.previousScenario = xpp.getText();
 					lastNameWasMatchingPromptScore = 0;
 				}
 			}
@@ -188,5 +189,6 @@ public class DownloadAndProcessXML extends AsyncTask<String, Void, String> {
 				Log.e("TTS", "Application Error Occured");
 			}
 		}
+		return processedText;
 	}
 }
