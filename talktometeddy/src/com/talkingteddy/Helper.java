@@ -95,7 +95,7 @@ public class Helper {
 	}
 	
 	public static String getRecognitionURL(String query){
-		String urlFormat = "http://www.sentencerecognition.com/sentreco2.php?key=ae2b1fca515949e5d54fb22b8ed95575&bot_id=2&scenario_id=%s&input=%s";
+		String urlFormat = "http://www.sentencerecognition.com/sentreco2.php?key=ae2b1fca515949e5d54fb22b8ed95575&bot_id=4&scenario_id=%s&input=%s";
 		return String.format(urlFormat, previousScenario, query);
 		
 	}
