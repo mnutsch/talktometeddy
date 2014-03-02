@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+from datetime import datetime
 from flask import Flask, abort, request, jsonify, g, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.httpauth import HTTPBasicAuth
@@ -19,8 +20,15 @@ auth = HTTPBasicAuth()
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(32), index = True)
-    password_hash = db.Column(db.String(64))
+    username = db.Column('username', db.String(32), index = True)
+    email = db.Column('email', db.String(45), index = True)
+    password_hash = db.Column('password_hash', db.String(120))
+    created_time = db.Column('created_time' , db.DateTime)
+
+    def __init__(self , username, email):
+        self.username = username
+        self.email = email
+        self.created_time = datetime.utcnow()
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -44,6 +52,29 @@ class User(db.Model):
         user = User.query.get(data['id'])
         return user
 
+class Activity(db.Model):
+    __tablename__ = 'activities'
+    id = db.Column(db.Integer, primary_key = True)
+    reco = db.Column('reco', db.String(140))
+    response = db.Column('response', db.String(140))
+    user_id = db.Column('user_id', db.Integer)
+    created_time = db.Column('created_time' , db.DateTime)
+
+    def __init__(self, reco, response, user_id):
+        self.reco = reco
+        self.response = response
+        self.user_id = user_id
+        self.created_time = datetime.utcnow()
+
+    @property
+    def serialize(self):
+       """Return Activity data in easily serializeable format"""
+       return {
+           'id' : self.id,
+           'reco': self.reco,
+           'response': self.response
+       }
+
 @auth.verify_password
 def verify_password(username_or_token, password):
     # first try to authenticate by token
@@ -59,12 +90,13 @@ def verify_password(username_or_token, password):
 @app.route('/api/users', methods = ['POST'])
 def new_user():
     username = request.json.get('username')
+    email = request.json.get('email')
     password = request.json.get('password')
     if username is None or password is None:
         abort(400) # missing arguments
     if User.query.filter_by(username = username).first() is not None:
         abort(400) # existing user
-    user = User(username = username)
+    user = User(username, email)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
@@ -83,7 +115,28 @@ def get_auth_token():
     token = g.user.generate_auth_token(600)
     return jsonify({ 'token': token.decode('ascii'), 'duration': 600 })
 
-@app.route('/api/resource')
+@app.route('/api/resources/<int:id>')
+def get_resource(id):
+    activity = Activity.query.get(id)
+    if not activity:
+        abort(400)
+    return jsonify({'data': activity.serialize})
+
+@app.route('/api/resources')
 @auth.login_required
-def get_resource():
-    return jsonify({ 'data': 'Hello, %s!' % g.user.username })
+def get_resources():
+    activities = Activity.query.filter_by(user_id = g.user.id)
+    return jsonify({ 'data': [i.serialize for i in activities.all()]})
+
+@app.route('/api/resources', methods = ['POST'])
+@auth.login_required
+def new_resource():
+    reco = request.json.get('reco')
+    response = request.json.get('response')
+    if reco is None or response is None:
+        abort(400) # missing arguments
+    user_id = g.user.id
+    activity = Activity(reco, response, user_id)
+    db.session.add(activity)
+    db.session.commit()
+    return jsonify({'response':201})
