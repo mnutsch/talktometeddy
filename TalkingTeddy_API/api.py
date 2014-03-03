@@ -70,9 +70,9 @@ class Activity(db.Model):
     def serialize(self):
        """Return Activity data in easily serializeable format"""
        return {
-           'id' : self.id,
            'reco': self.reco,
-           'response': self.response
+           'response': self.response,
+           'created_at' : self.created_time
        }
 
 @auth.verify_password
@@ -112,8 +112,8 @@ def get_user(id):
 @app.route('/api/token')
 @auth.login_required
 def get_auth_token():
-    token = g.user.generate_auth_token(600)
-    return jsonify({ 'token': token.decode('ascii'), 'duration': 600 })
+    token = g.user.generate_auth_token(604800)
+    return jsonify({ 'token': token.decode('ascii') })
 
 @app.route('/api/resources/<int:id>')
 def get_resource(id):
