@@ -82,14 +82,13 @@ public class Helper {
 		Toast toast = Toast.makeText(context, message, TOAST_DURATION);
 		toast.show();
 	}
-	
 	/**
 	 * Report usage to google analytics
 	 * 
 	 * @param matchedPrompt
 	 *            , phrase that was matched.
 	 */
-	public static void logUserData(String matchedPrompt, ResponseDigest respDigest) {
+	public static void logUserData(ResponseDigest respDigest) {
 		 EasyTracker.getTracker().sendEvent("conversation", "user_statement",
 				 respDigest.getMatchingPrompt()+"_"+respDigest.getActualPrompt(), longitem); //Google Analytics event
 	}

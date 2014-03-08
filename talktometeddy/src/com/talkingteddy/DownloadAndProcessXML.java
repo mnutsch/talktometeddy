@@ -55,6 +55,8 @@ public class DownloadAndProcessXML extends AsyncTask<String, Void, String> {
 			String returnedText = parseXML(result);
 			 EasyTracker.getTracker().sendEvent("internal", "general",
 			 "sentencerecognition_api_connection_successful", longitem);
+			 this.responseDigest.setMatchingPrompt(returnedText);
+			 Helper.logUserData(this.responseDigest);
 			TalkingTeddyActivity.GenerateOutput(returnedText);
 		} catch (XmlPullParserException e) {
 			 EasyTracker.getTracker().sendEvent("error", "general",
