@@ -17,9 +17,9 @@ public class UserFunctions {
      
     // Testing in localhost using wamp or xampp 
     // use http://10.0.2.2/ to connect to your localhost ie http://localhost/
-    private static String loginURL = "http://fierce-ridge-5371.herokuapp.com/api/users";
-    private static String registerURL = "http://fierce-ridge-5371.herokuapp.com/api/users";
-    private static String activityURL = "http://fierce-ridge-5371.herokuapp.com/api/activity";
+    private static String loginURL = "https://fierce-ridge-5371.herokuapp.com/api/users";
+    private static String registerURL = "https://fierce-ridge-5371.herokuapp.com/api/users";
+    private static String activityURL = "https://fierce-ridge-5371.herokuapp.com/api/activity";
     
     private static String login_tag = "login";
     private static String register_tag = "register";
