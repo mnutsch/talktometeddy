@@ -14,6 +14,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 

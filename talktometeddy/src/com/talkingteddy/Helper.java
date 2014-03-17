@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import Library.UserFunctions;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.speech.tts.TextToSpeech;
@@ -20,6 +21,9 @@ public class Helper {
 	private static long longitem = 0; // used by Google Analytics
 	
 	public static String previousScenario = "998";
+	
+	public static Context context;
+	private static ResponseDigest responseDigest;
 	
 	/**
 	 * Speaks the given text. If text is empty, speak "You haven't typed text".
@@ -91,6 +95,12 @@ public class Helper {
 	public static void logUserData(ResponseDigest respDigest) {
 		 EasyTracker.getTracker().sendEvent("conversation", "user_statement",
 				 respDigest.getMatchingPrompt()+"_"+respDigest.getActualPrompt(), longitem); //Google Analytics event
+		 responseDigest = respDigest;
+		 new Thread(new Runnable() {
+    		 public void run() {
+		 UserFunctions userfunc = new UserFunctions();
+		 userfunc.trackUsage(context, responseDigest.getActualPrompt(), responseDigest.getMatchingPrompt());
+    		 }}).start();
 	}
 	
 	public static String getRecognitionURL(String query){

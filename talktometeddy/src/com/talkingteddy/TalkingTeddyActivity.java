@@ -1,5 +1,7 @@
 package com.talkingteddy;
 
+import Library.DatabaseHandler;
+import Library.UserFunctions;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -11,6 +13,9 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -37,6 +42,8 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 
 	private static final int RESULT_SPEECH = 1;
 	
+	private UserFunctions userFunctions;
+	
 	public static void GenerateOutput(String returnedText) {
 		Helper.startTTS(returnedText, tts, context);
 	}
@@ -47,31 +54,49 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
+		Helper.previousScenario = "998";
+		Helper.context = this.getApplicationContext();
+		super.onCreate(savedInstanceState);
+		
 		if (BuildConfig.DEBUG) {
 			GoogleAnalytics googleAnalytics = GoogleAnalytics
 					.getInstance(getApplicationContext());
 			googleAnalytics.setAppOptOut(true);
 		}
-
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.speech);
-
-		tts = new TextToSpeech(this, this);
-		tts.setSpeechRate(0.95f);
-		context = this;
 		
-		EasyTracker.getInstance().setContext(context);
-
-		heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
-		heartSpeakButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				PerformRecongnition();
-			}
-		});
+		/**
+         * Dashboard Screen for the application
+         * */       
+        // Check login status in database
+        userFunctions = new UserFunctions();
+        if(!userFunctions.isUserLoggedIn(getApplicationContext())){
+        	
+        	 // user is not logged in show login screen
+            Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+            login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(login);
+            // Closing dashboard screen
+            finish();
+        }       
+        else{
+        	// user already logged in show databoard
+			setContentView(R.layout.speech);
+	
+			tts = new TextToSpeech(this, this);
+			tts.setSpeechRate(0.95f);
+			context = this;
+			
+			EasyTracker.getInstance().setContext(context);
+	
+			heartSpeakButton = (ImageButton) findViewById(R.id.heartSpeakButton);
+			heartSpeakButton.setOnClickListener(new View.OnClickListener() {
+	
+				@Override
+				public void onClick(View v) {
+					PerformRecongnition();
+				}
+			});
+        }
 	}
 
 	/**
@@ -140,6 +165,53 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 
 	}
 	
+	// Initiating Menu XML file (menu.xml)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.layout.menu, menu);
+        return true;
+    }
+    
+    /**
+     * Event Handling for Individual menu item selected
+     * Identify single menu item by it's id
+     * */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+         
+        switch (item.getItemId())
+        {
+        case R.id.menu_logout:
+            // Single menu item is selected do something
+        	UserFunctions userFunction = new UserFunctions();
+        	if (userFunction.logoutUser(getApplicationContext()))
+        	{
+            // Ex: launching new activity/screen or show alert message
+        		Toast.makeText(TalkingTeddyActivity.this, "User logged out.", Toast.LENGTH_SHORT).show();
+        		// Launch Dashboard Screen
+                Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                 
+                // Close all views before launching Dashboard
+                loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(loginActivity);
+                 
+                // Close Login Screen
+                finish();
+        	}
+        	else
+        	{
+        		Toast.makeText(TalkingTeddyActivity.this, "There was some error in logging user out. Try again.", Toast.LENGTH_SHORT).show();
+        	}
+            return true;
+
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }    
+	
 	/**
 	 * Matches the text with one of the tasks, and start the TTS with matched
 	 * task.
@@ -160,7 +232,7 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 		// And then perform a search on a website using the text.
 		String query = URLEncoder.encode(speechText);
 		ExecuteServerCall(query);
-
+		
 	}
 	
 	private void ExecuteServerCall(String speechText)
@@ -173,6 +245,7 @@ public class TalkingTeddyActivity extends Activity implements OnInitListener {
 			Helper.showToast("Thinking...", context);
 			downloadAndProcessXML = new DownloadAndProcessXML();
 			downloadAndProcessXML.execute(recognitionURL, speechText);
+			
 		} else {
 			Helper.startTTS(
 					"Teddy needs internet connection to work properly.", tts,

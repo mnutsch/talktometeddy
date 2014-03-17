@@ -28,6 +28,7 @@
         <!--<category android:name="android.intent.category.LAUNCHER"/>-->
         <!--</intent-filter>-->
         <!--</activity>-->
+        
         <activity
                 android:name="com.talkingteddy.TalkingTeddyActivity"
                 android:label="@string/app_name_activity"
@@ -38,6 +39,21 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        
+         <activity android:name=".LoginActivity"
+                  android:label="Login to your Account"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+ 
+        <!--  Entry for RegisterActivity.class -->
+        <activity android:name=".RegisterActivity"
+                  android:label="Register New Account"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 </manifest>

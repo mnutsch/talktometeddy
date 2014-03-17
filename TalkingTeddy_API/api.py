@@ -3,9 +3,11 @@ import os
 from datetime import datetime
 from flask import Flask, abort, request, jsonify, g, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import exc
 from flask.ext.httpauth import HTTPBasicAuth
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
+from email.utils import parseaddr
 
 # initialization
 app = Flask(__name__)
@@ -76,45 +78,133 @@ class Activity(db.Model):
        }
 
 @auth.verify_password
-def verify_password(username_or_token, password):
+def verify_password(email_or_token, password):
     # first try to authenticate by token
     user = User.verify_auth_token(username_or_token)
     if not user:
         # try to authenticate with username/password
-        user = User.query.filter_by(username = username_or_token).first()
+        user = User.query.filter_by(email = email_or_token).first()
         if not user or not user.verify_password(password):
             return False
     g.user = user
     return True
 
+def user_input_valid(username, email, password):
+    if username is None or not username or len(username) < 1 or username.isspace():
+        return False
+    elif password is None or not password or len(password) < 1 or password.isspace():
+        return False
+    elif email is None or not email or len(email) < 1 or email.isspace():
+        return False
+    else:
+        return True
+
+#Register New User
 @app.route('/api/users', methods = ['POST'])
 def new_user():
-    username = request.json.get('username')
+    tag = request.json.get('tag')
     email = request.json.get('email')
     password = request.json.get('password')
-    if username is None or password is None:
-        abort(400) # missing arguments
-    if User.query.filter_by(username = username).first() is not None:
-        abort(400) # existing user
-    user = User(username, email)
-    user.hash_password(password)
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({ 'username': user.username }), 201, {'Location': url_for('get_user', id = user.id, _external = True)}
+    if tag == 'register':
+        username = request.json.get('username')
+        new_user_response = {}
+        new_user_response["tag"] = "register"
+        if not user_input_valid(username, email, password):
+            new_user_response["success"] = 0
+            new_user_response["error"] = 1
+            new_user_response["error_msg"] = "Error occured in registartion, missing or invalid fullname, email or password"
+            return jsonify(new_user_response) # missing arguments
 
+        try:
+            if User.query.filter_by(email = email).first() is not None:
+                new_user_response["success"] = 0
+                new_user_response["error"] = 1
+                new_user_response["error_msg"] = "User already exist"
+                return jsonify(new_user_response) # User already existed
+
+            user = User(username, email)
+            user.hash_password(password)
+            db.session.add(user)
+            db.session.commit()
+
+            new_user_info = {}
+            new_user_info["name"] = user.username
+            new_user_info["email"] = user.email
+            new_user_info["created_time"] = user.created_time
+
+            new_user_response["success"] = 1
+            new_user_response["error"] = 0
+            new_user_response["uid"] = user.id
+            new_user_response["user"] = new_user_info
+            return jsonify(new_user_response)
+
+        except exc.SQLAlchemyError:
+            new_user_response["success"] = 0
+            new_user_response["error"] = 1
+            new_user_response["error_msg"] = "Error occured in registartion, try again"
+            return jsonify(new_user_response) # connection to db failed
+    else:
+        login_user_response = {}
+        login_user_response["tag"] = "login"
+        login_user_response["success"] = 0
+        login_user_response["error"] = 1
+
+        try:
+            user = User.query.filter_by(email = email).first()
+            if not user or not user.verify_password(password):
+                login_user_response["error_msg"] = "Incorrect email or password"
+                return jsonify(login_user_response)
+
+            login_user_info = {}
+            login_user_response["success"] = 1
+            login_user_response["error"] = 0
+            login_user_info["name"] = user.username
+            login_user_info["email"] = user.email
+            login_user_info["created_time"] = user.created_time
+            login_user_response["uid"] = user.id
+            login_user_response["user"] = login_user_info
+
+            return jsonify(login_user_response)
+
+        except exc.SQLAlchemyError:
+            login_user_response["success"] = 0
+            login_user_response["error"] = 1
+            login_user_response["error_msg"] = "Error occured in login, try again"
+            return jsonify(login_user_response) # connection to db failed
+
+#Login Existing User
 @app.route('/api/users/<int:id>')
+@auth.login_required
 def get_user(id):
+    login_user_response = {}
+    login_user_response["tag"] = "login"
+    login_user_response["success"] = 0
+    login_user_response["error"] = 1
+
     user = User.query.get(id)
     if not user:
-        abort(400)
-    return jsonify({ 'username': user.username })
+        login_user_response["error_msg"] = "User not registered"
+        return jsonify(login_user_response)
 
+    login_user_info = {}
+    login_user_response["success"] = 1
+    login_user_response["error"] = 0
+    login_user_info["name"] = user.username
+    login_user_info["email"] = user.email
+    login_user_info["created_time"] = user.created_time
+    login_user_response["uid"] = user.id
+    login_user_response["user"] = login_user_info
+
+    return jsonify(login_user_response)
+
+#Get token
 @app.route('/api/token')
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token(604800)
     return jsonify({ 'token': token.decode('ascii') })
 
+#Get user activity by id
 @app.route('/api/resources/<int:id>')
 def get_resource(id):
     activity = Activity.query.get(id)
@@ -122,12 +212,33 @@ def get_resource(id):
         abort(400)
     return jsonify({'data': activity.serialize})
 
+#Post user activity
+@app.route('/api/activity', methods = ['POST'])
+def new_user_activity():
+    reco = request.json.get('reco')
+    response = request.json.get('response')
+    uid = request.json.get('uid')
+    new_activity_response = {}
+    if reco is None or response is None or uid is None:
+        new_activity_response["error"] = 1
+        new_activity_response["success"] = 0
+        new_activity_response["error_msg"] = "Reco or response is empty or invalid"
+        return jsonify(new_activity_response)
+    else:
+        activity = Activity(reco, response, uid)
+        db.session.add(activity)
+        db.session.commit()
+        new_activity_response["success"] = 1
+        return jsonify(new_activity_response)
+
+#Get all user's activities
 @app.route('/api/resources')
 @auth.login_required
 def get_resources():
     activities = Activity.query.filter_by(user_id = g.user.id)
     return jsonify({ 'data': [i.serialize for i in activities.all()]})
 
+#Post new user activity
 @app.route('/api/resources', methods = ['POST'])
 @auth.login_required
 def new_resource():
@@ -140,3 +251,6 @@ def new_resource():
     db.session.add(activity)
     db.session.commit()
     return jsonify({'response':201})
+
+if __name__ == '__main__':
+    app.run(debug = True)
